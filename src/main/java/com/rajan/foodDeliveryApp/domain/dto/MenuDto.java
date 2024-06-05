@@ -12,13 +12,12 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RestaurantDto {
-    private Long restaurantId;
+public class MenuDto {
+    private Long menuId;
 
     private String name;
 
-    private String cuisine;
+    private RestaurantDto restaurant;
 
-    private MenuDto menus;
-
+    private List<FoodDto> foodIds;
 }

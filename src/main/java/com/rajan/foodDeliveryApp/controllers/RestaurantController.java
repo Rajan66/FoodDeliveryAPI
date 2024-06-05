@@ -66,7 +66,10 @@ public class RestaurantController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<RestaurantDto> createUpdateRestaurant(@PathVariable("id") Long id) {
+    public ResponseEntity<RestaurantDto> deleteRestaurant(@PathVariable("id") Long id) {
+        if (!restaurantService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         restaurantService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

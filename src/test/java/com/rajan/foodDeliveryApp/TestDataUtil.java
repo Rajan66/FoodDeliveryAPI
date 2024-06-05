@@ -11,7 +11,6 @@ public final class TestDataUtil {
 
     public static RestaurantDto createTestRestaurantDtoA() {
         return RestaurantDto.builder()
-                .restaurant_id(100L)
                 .name("Ram Momo")
                 .cuisine("Nepali")
                 .build();
@@ -19,7 +18,6 @@ public final class TestDataUtil {
 
     public static RestaurantDto createTestRestaurantDtoB() {
         return RestaurantDto.builder()
-                .restaurant_id(100L)
                 .name("Gourmet Eatery")
                 .cuisine("Burger")
                 .build();
@@ -27,7 +25,6 @@ public final class TestDataUtil {
 
     public static RestaurantEntity createTestRestaurantA() {
         return RestaurantEntity.builder()
-                .restaurant_id(100L)
                 .name("Ram Momo")
                 .cuisine("Nepali")
                 .build();
@@ -35,7 +32,6 @@ public final class TestDataUtil {
 
     public static RestaurantEntity createTestRestaurantB() {
         return RestaurantEntity.builder()
-                .restaurant_id(100L)
                 .name("Gourmet Eatery")
                 .cuisine("Burger")
                 .build();

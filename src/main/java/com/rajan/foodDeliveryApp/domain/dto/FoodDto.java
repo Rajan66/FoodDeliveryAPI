@@ -1,5 +1,6 @@
 package com.rajan.foodDeliveryApp.domain.dto;
 
+import com.rajan.foodDeliveryApp.config.FoodCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,13 +13,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RestaurantDto {
-    private Long restaurantId;
+public class FoodDto {
+
+    private Long foodId;
 
     private String name;
 
-    private String cuisine;
+    private FoodCategory category;
 
-    private MenuDto menus;
-
+    private List<MenuDto> menus;
 }
