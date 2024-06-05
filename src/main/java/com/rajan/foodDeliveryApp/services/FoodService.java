@@ -1,7 +1,6 @@
 package com.rajan.foodDeliveryApp.services;
 
 import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
-import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
 
 import java.util.List;
 import java.util.Optional;

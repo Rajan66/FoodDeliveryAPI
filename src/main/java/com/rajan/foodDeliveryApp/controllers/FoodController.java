@@ -1,11 +1,8 @@
 package com.rajan.foodDeliveryApp.controllers;
 
 import com.rajan.foodDeliveryApp.domain.dto.FoodDto;
-import com.rajan.foodDeliveryApp.domain.dto.RestaurantDto;
 import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
-import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
-import com.rajan.foodDeliveryApp.mappers.impl.FoodMapperImpl;
 import com.rajan.foodDeliveryApp.services.FoodService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
