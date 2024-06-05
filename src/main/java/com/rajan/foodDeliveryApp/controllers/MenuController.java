@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/menus")
+@RequestMapping("/api")
 public class MenuController {
 
     private static final Logger log = LoggerFactory.getLogger(MenuController.class);
@@ -41,11 +41,14 @@ public class MenuController {
         this.foodService = foodService;
     }
 
-    @PostMapping(path = "/{id}")
-    public ResponseEntity<MenuDto> createMenu(@PathVariable("id") Long id, @RequestBody MenuDto menuDto) {
+    @PostMapping(path = "/restaurants/{restaurant_id}/menus/{id}")
+    public ResponseEntity<MenuDto> createMenu(
+            @PathVariable("id") Long id,
+            @PathVariable("restaurant_id") Long restaurant_id,
+            @RequestBody MenuDto menuDto) {
         MenuEntity menuEntity = menuMapper.mapFrom(menuDto);
 
-        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findOne(menuDto.getRestaurant().getRestaurantId());
+        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findOne(restaurant_id);
         RestaurantEntity restaurantEntity = optionalRestaurantEntity.orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
         menuEntity.setMenu_id(id);
@@ -55,7 +58,7 @@ public class MenuController {
                 .map(foodDto -> {
                     if (!foodService.isExists(foodDto.getFoodId())) {
                         // If foodId is null, create a new FoodEntity
-                        FoodEntity newFood = foodMapper.mapFrom(foodDto); // Assuming you have a mapper to map FoodDto to FoodEntity
+                        FoodEntity newFood = foodMapper.mapFrom(foodDto);
                         newFood.setMenu_id(id);
                         return foodService.save(newFood);
                     } else {
@@ -66,7 +69,6 @@ public class MenuController {
                 })
                 .collect(Collectors.toList());
 
-        // Set the list of foods in the menu entity
         menuEntity.setFoods(foods);
 
         MenuEntity savedMenuEntity = menuService.save(menuEntity);
@@ -74,8 +76,34 @@ public class MenuController {
         return new ResponseEntity<>(savedMenuDto, HttpStatus.CREATED);
     }
 
+    @PatchMapping(path = "/restaurants/{restaurant_id}/menus/{id}")
+    public ResponseEntity<MenuDto> addFoodToMenu(
+            @PathVariable("id") Long id,
+            @PathVariable("restaurant_id") Long restaurant_id,
+            @RequestBody MenuDto menuDto) {
+        MenuEntity menuEntity = menuMapper.mapFrom(menuDto);
 
-    @GetMapping(path = "")
+        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findOne(restaurant_id);
+        RestaurantEntity restaurantEntity = optionalRestaurantEntity.orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        menuEntity.setMenu_id(id);
+        menuEntity.setRestaurant(restaurantEntity);
+
+        List<FoodEntity> foods = menuDto.getFoods().stream()
+                .filter(foodDto -> !foodService.isExists(foodDto.getFoodId())) // Filter foods that do not exist
+                .map(foodMapper::mapFrom) // Map FoodDto to FoodEntity using foodMapper
+                .peek(foodEntity -> foodEntity.setMenu_id(id)) // Set menu_id for each FoodEntity
+                .map(foodService::save) // Save each FoodEntity
+                .toList();
+
+        menuEntity.setFoods(foods);
+        MenuEntity savedMenuEntity = menuService.save(menuEntity);
+        MenuDto savedMenuDto = menuMapper.mapTo(savedMenuEntity);
+
+        return new ResponseEntity<>(savedMenuDto, HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path = "/menus")
     public List<MenuDto> listMenus() {
         List<MenuEntity> menuEntities = menuService.findAll();
         return menuEntities.stream().map(menuMapper::mapTo).collect(Collectors.toList());
