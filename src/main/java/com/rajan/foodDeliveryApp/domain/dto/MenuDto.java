@@ -19,5 +19,5 @@ public class MenuDto {
 
     private RestaurantDto restaurant;
 
-    private List<FoodDto> foodIds;
+    private List<FoodDto> foods;
 }

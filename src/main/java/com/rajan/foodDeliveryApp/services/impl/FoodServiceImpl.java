@@ -33,6 +33,11 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public Optional<FoodEntity> findById(Long id) {
+        return foodRepository.findById(id);
+    }
+
+    @Override
     public void delete(Long id) {
         foodRepository.deleteById(id);
     }

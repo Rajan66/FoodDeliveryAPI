@@ -1,6 +1,8 @@
 package com.rajan.foodDeliveryApp.domain.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,21 +21,15 @@ import java.util.Set;
 public class MenuEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "menu_id_seq")
     private Long menu_id;
 
     private String name;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     private RestaurantEntity restaurant;
 
-    @ManyToMany
-    @JoinTable(
-            name = "menus",
-            joinColumns = @JoinColumn(name = "menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id")
-    )
+    @OneToMany(mappedBy = "menu_id", cascade = CascadeType.ALL)
     private List<FoodEntity> foods;
 
 }

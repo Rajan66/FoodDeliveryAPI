@@ -14,6 +14,8 @@ public interface FoodService {
 
     List<FoodEntity> findAll();
 
+    Optional<FoodEntity> findById(Long id);
+
     void delete(Long id);
 
     boolean isExists(Long id);

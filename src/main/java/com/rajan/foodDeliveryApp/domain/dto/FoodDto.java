@@ -19,7 +19,10 @@ public class FoodDto {
 
     private String name;
 
-    private FoodCategory category;
+    private String category;
 
-    private List<MenuDto> menus;
+    private Integer price;
+
+    private Long menuId;
+
 }

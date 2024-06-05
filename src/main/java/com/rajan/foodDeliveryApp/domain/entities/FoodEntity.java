@@ -1,6 +1,7 @@
 package com.rajan.foodDeliveryApp.domain.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rajan.foodDeliveryApp.config.FoodCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,8 @@ public class FoodEntity {
 
     private String category;
 
-    @OneToMany(mappedBy = "foods")
-    private List<MenuEntity> menus;
+    private Integer price;
+
+    @Column(name = "menu_id")
+    private Long menu_id;
 }

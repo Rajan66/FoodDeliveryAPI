@@ -19,6 +19,5 @@ public class RestaurantDto {
 
     private String cuisine;
 
-    private MenuDto menus;
 
 }

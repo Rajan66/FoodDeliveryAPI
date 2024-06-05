@@ -1,5 +1,6 @@
 package com.rajan.foodDeliveryApp.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,4 @@ public class RestaurantEntity {
 
     private String cuisine;
 
-    @OneToOne(mappedBy = "restaurant")
-    private MenuEntity menus;
 }
