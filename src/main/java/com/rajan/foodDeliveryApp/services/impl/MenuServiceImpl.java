@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.util.Locale.filter;
+
 @Service
 public class MenuServiceImpl implements MenuService {
 
@@ -30,6 +32,11 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuEntity> findAll() {
         return StreamSupport.stream(menuRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    }
+
+
+    public List<MenuEntity> getMenusByRestaurantId(Long restaurantId) {
+        return menuRepository.findByRestaurantRestaurantId(restaurantId);
     }
 
     @Override

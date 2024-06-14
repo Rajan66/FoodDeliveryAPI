@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface RestaurantService {
     RestaurantEntity save(RestaurantEntity restaurantEntity);
 
-
     Optional<RestaurantEntity> findOne(Long id);
 
     List<RestaurantEntity> findAll();

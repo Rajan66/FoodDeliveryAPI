@@ -13,6 +13,8 @@ public interface MenuService {
 
     List<MenuEntity> findAll();
 
+    List<MenuEntity> getMenusByRestaurantId(Long id);
+
     void delete(Long id);
 
     boolean isExists(Long id);

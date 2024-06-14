@@ -32,7 +32,6 @@ public class MenuController {
     private final RestaurantService restaurantService;
     private final FoodService foodService;
 
-    @Autowired
     public MenuController(RestaurantService restaurantService, Mapper<MenuEntity, MenuDto> menuMapper, Mapper<FoodEntity, FoodDto> foodMapper, MenuService menuService, FoodService foodService) {
         this.restaurantService = restaurantService;
         this.menuMapper = menuMapper;
@@ -107,5 +106,11 @@ public class MenuController {
     public List<MenuDto> listMenus() {
         List<MenuEntity> menuEntities = menuService.findAll();
         return menuEntities.stream().map(menuMapper::mapTo).collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "/restaurants/{restaurant_id}/menus")
+    public List<MenuDto> listRestaurantMenus(@PathVariable("restaurant_id") Long restaurant_id) {
+        List<MenuEntity> restaurantMenuList = menuService.getMenusByRestaurantId(restaurant_id);
+        return restaurantMenuList.stream().map(menuMapper::mapTo).collect(Collectors.toList());
     }
 }

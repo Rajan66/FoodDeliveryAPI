@@ -59,7 +59,7 @@ public class RestaurantController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
-        restaurantEntity.setRestaurant_id(id);
+        restaurantEntity.setRestaurantId(id);
         RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity);
         RestaurantDto savedRestaurantDto = restaurantMapper.mapTo(savedRestaurantEntity);
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.OK);

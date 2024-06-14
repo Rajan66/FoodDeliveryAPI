@@ -117,7 +117,7 @@ public class RestaurantControllerIntegrationTests {
     @Transactional
     public void testThatGetRestaurantReturnsRestaurant() throws Exception {
         RestaurantEntity restaurantEntityA = TestDataUtil.createTestRestaurantA();
-        restaurantEntityA.setRestaurant_id(100L);
+        restaurantEntityA.setRestaurantId(100L);
         restaurantService.save(restaurantEntityA);
 
         mockMvc.perform(
@@ -135,13 +135,13 @@ public class RestaurantControllerIntegrationTests {
         restaurantService.save(restaurantEntity);
 
         RestaurantDto restaurantDto = TestDataUtil.createTestRestaurantDtoA();
-        restaurantDto.setRestaurant_id(restaurantEntity.getRestaurant_id());
+        restaurantDto.setRestaurant_id(restaurantEntity.getRestaurantId());
         restaurantDto.setName("damn mommo");
 
         String restaurantJson = objectMapper.writeValueAsString(restaurantDto);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/restaurants/" + restaurantEntity.getRestaurant_id())
+                MockMvcRequestBuilders.put("/api/restaurants/" + restaurantEntity.getRestaurantId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(restaurantJson)
         ).andExpect(
@@ -156,16 +156,16 @@ public class RestaurantControllerIntegrationTests {
         restaurantService.save(restaurantEntity);
 
         RestaurantDto restaurantDto = TestDataUtil.createTestRestaurantDtoA();
-        restaurantDto.setRestaurant_id(restaurantEntity.getRestaurant_id());
+        restaurantDto.setRestaurant_id(restaurantEntity.getRestaurantId());
         restaurantDto.setName("Parvati momo");
 
         String restaurantJson = objectMapper.writeValueAsString(restaurantDto);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.put("/api/restaurants/" + restaurantEntity.getRestaurant_id())
+                        MockMvcRequestBuilders.put("/api/restaurants/" + restaurantEntity.getRestaurantId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(restaurantJson)
-                ).andExpect(MockMvcResultMatchers.jsonPath("$.restaurant_id").value(restaurantEntity.getRestaurant_id()))
+                ).andExpect(MockMvcResultMatchers.jsonPath("$.restaurant_id").value(restaurantEntity.getRestaurantId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Parvati momo"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cuisine").value("Nepali"));
     }
@@ -177,7 +177,7 @@ public class RestaurantControllerIntegrationTests {
         restaurantService.save(restaurantEntity);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/restaurants/" + restaurantEntity.getRestaurant_id())
+                MockMvcRequestBuilders.delete("/api/restaurants/" + restaurantEntity.getRestaurantId())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 MockMvcResultMatchers.status().isNoContent());
