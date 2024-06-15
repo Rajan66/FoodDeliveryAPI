@@ -5,15 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
-public class RestaurantDto {
-    private Long restaurantId;
-
-    private String name;
-
-    private String cuisine;
-
+public class RegisterRequest {
+    private String email;
+    private String password;
+    private String firstName;
+    private String lastName;
 }

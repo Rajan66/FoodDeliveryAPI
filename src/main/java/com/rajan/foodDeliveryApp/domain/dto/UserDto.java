@@ -5,15 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class RestaurantDto {
-    private Long restaurantId;
+public class UserDto {
 
-    private String name;
+    private Long id;
 
-    private String cuisine;
+    private String email;
+
+    private String firstName;
+
+    private String lastName;
 
 }
