@@ -1,5 +1,6 @@
 package com.rajan.foodDeliveryApp.domain.dto;
 
+import com.rajan.foodDeliveryApp.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +20,5 @@ public class UserDto {
 
     private String lastName;
 
+    private Role role;
 }
