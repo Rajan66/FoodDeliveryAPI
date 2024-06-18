@@ -1,6 +1,8 @@
 package com.rajan.foodDeliveryApp.services;
 
 import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +12,7 @@ public interface RestaurantService {
 
     Optional<RestaurantEntity> findOne(Long id);
 
-    List<RestaurantEntity> findAll();
+    Page<RestaurantEntity> findAll(Pageable pageable);
 
     void delete(Long id);
 

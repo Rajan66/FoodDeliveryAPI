@@ -4,6 +4,8 @@ import com.rajan.foodDeliveryApp.domain.dto.FoodDto;
 import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
 import com.rajan.foodDeliveryApp.services.FoodService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +38,9 @@ public class FoodController {
     }
 
     @GetMapping(path = "")
-    public List<FoodDto> listFoods() {
-        List<FoodEntity> foodEntities = foodService.findAll();
-        return foodEntities.stream().map(foodMapper::mapTo).collect(Collectors.toList());
+    public Page<FoodDto> listFoods(Pageable pageable) {
+        Page<FoodEntity> foodEntities = foodService.findAll(pageable);
+        return foodEntities.map(foodMapper::mapTo);
     }
 
     @GetMapping(path = "/{id}")
@@ -52,20 +54,20 @@ public class FoodController {
 
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<FoodDto> updateFood(@PathVariable("id") Long id,@RequestBody FoodDto foodDto) {
-        if(!foodService.isExists(id)){
+    public ResponseEntity<FoodDto> updateFood(@PathVariable("id") Long id, @RequestBody FoodDto foodDto) {
+        if (!foodService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         FoodEntity foodEntity = foodMapper.mapFrom(foodDto);
         foodEntity.setFood_id(id);
         FoodEntity savedFoodEntity = foodService.save(foodEntity);
         FoodDto savedFoodDto = foodMapper.mapTo(savedFoodEntity);
-        return new ResponseEntity<>(savedFoodDto,HttpStatus.OK);
+        return new ResponseEntity<>(savedFoodDto, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<FoodDto> deleteFood(@PathVariable("id") Long id) {
-        if(!foodService.isExists(id)){
+        if (!foodService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         foodService.delete(id);

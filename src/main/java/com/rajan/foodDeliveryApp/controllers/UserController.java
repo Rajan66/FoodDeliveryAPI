@@ -8,6 +8,8 @@ import com.rajan.foodDeliveryApp.repositories.UserRepository;
 import com.rajan.foodDeliveryApp.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +32,8 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public List<UserDto> getUsers() {
-        List<UserEntity> usersList = userService.findAll();
-        return usersList.stream().map(userMapper::mapTo).collect(Collectors.toList());
+    public Page<UserDto> listUsers(Pageable pageable) {
+        Page<UserEntity> usersList = userService.findAll(pageable);
+        return usersList.map(userMapper::mapTo);
     }
 }

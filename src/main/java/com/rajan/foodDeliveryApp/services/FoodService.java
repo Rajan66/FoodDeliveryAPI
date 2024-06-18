@@ -1,6 +1,8 @@
 package com.rajan.foodDeliveryApp.services;
 
 import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,7 @@ public interface FoodService {
 
     Optional<FoodEntity> findOne(Long id);
 
-    List<FoodEntity> findAll();
+    Page<FoodEntity> findAll(Pageable pageable);
 
     Optional<FoodEntity> findById(Long id);
 

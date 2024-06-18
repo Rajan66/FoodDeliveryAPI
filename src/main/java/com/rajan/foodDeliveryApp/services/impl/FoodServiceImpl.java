@@ -4,6 +4,8 @@ import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
 import com.rajan.foodDeliveryApp.repositories.FoodRepository;
 import com.rajan.foodDeliveryApp.services.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<FoodEntity> findAll() {
-        return StreamSupport.stream(foodRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    public Page<FoodEntity> findAll(Pageable pageable) {
+        return foodRepository.findAll(pageable);
     }
 
     @Override

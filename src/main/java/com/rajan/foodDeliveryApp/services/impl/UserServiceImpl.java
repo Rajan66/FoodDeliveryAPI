@@ -5,6 +5,8 @@ import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.repositories.UserRepository;
 import com.rajan.foodDeliveryApp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +25,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<UserEntity> findAll() {
-        return StreamSupport.stream(userRepository
-                                .findAll()
-                                .spliterator(),
-                        false)
-                .collect(Collectors.toList());
+    public Page<UserEntity> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }

@@ -4,6 +4,8 @@ import com.rajan.foodDeliveryApp.domain.entities.MenuEntity;
 import com.rajan.foodDeliveryApp.repositories.MenuRepository;
 import com.rajan.foodDeliveryApp.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,10 +32,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuEntity> findAll() {
-        return StreamSupport.stream(menuRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    public Page<MenuEntity> findAll(Pageable pageable) {
+        return menuRepository.findAll(pageable);
     }
-
 
     public List<MenuEntity> getMenusByRestaurantId(Long restaurantId) {
         return menuRepository.findByRestaurantRestaurantId(restaurantId);

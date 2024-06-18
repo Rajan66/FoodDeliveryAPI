@@ -7,6 +7,8 @@ import com.rajan.foodDeliveryApp.mappers.impl.RestaurantMapperImpl;
 import com.rajan.foodDeliveryApp.services.RestaurantService;
 import com.rajan.foodDeliveryApp.services.impl.RestaurantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +33,9 @@ public class RestaurantController {
 
 
     @GetMapping(path = "")
-    public List<RestaurantDto> listRestaurants() {
-        List<RestaurantEntity> restaurantEntity = restaurantService.findAll();
-        return restaurantEntity.stream().map(restaurantMapper::mapTo).collect(Collectors.toList());
+    public Page<RestaurantDto> listRestaurants(Pageable pageable) {
+        Page<RestaurantEntity> restaurantEntity = restaurantService.findAll(pageable);
+        return restaurantEntity.map(restaurantMapper::mapTo);
     }
 
     @GetMapping(path = "/{id}")
