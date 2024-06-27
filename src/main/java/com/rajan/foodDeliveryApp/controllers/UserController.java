@@ -10,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,5 +36,24 @@ public class UserController {
     public Page<UserDto> listUsers(Pageable pageable) {
         Page<UserEntity> usersList = userService.findAll(pageable);
         return usersList.map(userMapper::mapTo);
+    }
+
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+        if (userService.isExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        UserEntity userEntity = userMapper.mapFrom(userDto);
+        UserEntity updatedUser = userService.save(userEntity);
+        return ResponseEntity.ok(userMapper.mapTo(updatedUser));
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long id) {
+        if (userService.isExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
