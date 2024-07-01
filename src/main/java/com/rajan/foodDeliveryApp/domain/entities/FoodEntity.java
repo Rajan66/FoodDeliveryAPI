@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +23,7 @@ public class FoodEntity {
 
     private String category;
 
-    private Integer price;
+    private BigDecimal price;
 
     @Column(name = "menu_id")
     private Long menu_id;
