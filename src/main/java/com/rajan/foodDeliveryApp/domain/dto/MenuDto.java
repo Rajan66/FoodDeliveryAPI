@@ -13,10 +13,7 @@ import java.util.List;
 @Builder
 public class MenuDto {
     private Long menuId;
-
     private String name;
-
     private RestaurantDto restaurant;
-
     private List<FoodDto> foods;
 }

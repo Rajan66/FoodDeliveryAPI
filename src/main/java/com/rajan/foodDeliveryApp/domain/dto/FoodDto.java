@@ -5,20 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class FoodDto {
-
     private Long foodId;
-
     private String name;
-
     private String category;
-
-    private Integer price;
-
+    private BigDecimal price;
     private Long menuId;
-
 }
