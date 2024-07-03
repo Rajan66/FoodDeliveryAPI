@@ -135,8 +135,8 @@ public class RestaurantControllerIntegrationTests {
         restaurantService.save(restaurantEntity);
 
         RestaurantDto restaurantDto = TestDataUtil.createTestRestaurantDtoA();
-        restaurantDto.setRestaurant_id(restaurantEntity.getRestaurantId());
-        restaurantDto.setName("damn mommo");
+        restaurantDto.setRestaurantId(restaurantEntity.getRestaurantId());
+        restaurantDto.setName("damn momo");
 
         String restaurantJson = objectMapper.writeValueAsString(restaurantDto);
 
@@ -156,7 +156,7 @@ public class RestaurantControllerIntegrationTests {
         restaurantService.save(restaurantEntity);
 
         RestaurantDto restaurantDto = TestDataUtil.createTestRestaurantDtoA();
-        restaurantDto.setRestaurant_id(restaurantEntity.getRestaurantId());
+        restaurantDto.setRestaurantId(restaurantEntity.getRestaurantId());
         restaurantDto.setName("Parvati momo");
 
         String restaurantJson = objectMapper.writeValueAsString(restaurantDto);
