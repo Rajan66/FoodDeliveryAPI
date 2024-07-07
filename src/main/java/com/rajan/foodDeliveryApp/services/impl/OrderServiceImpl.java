@@ -1,11 +1,11 @@
 package com.rajan.foodDeliveryApp.services.impl;
 
+
 import com.rajan.foodDeliveryApp.domain.entities.OrderEntity;
 import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.repositories.OrderRepository;
 import com.rajan.foodDeliveryApp.services.OrderService;
-import com.rajan.foodDeliveryApp.services.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,25 +18,25 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
-    private final RestaurantService restaurantService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, RestaurantService restaurantService) {
+    public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.restaurantService = restaurantService;
     }
+
 
     @Override
     public OrderEntity save(OrderEntity orderEntity, UserEntity user, RestaurantEntity restaurant) {
         orderEntity.setUser(user);
         orderEntity.setRestaurant(restaurant);
-        return orderRepository.save(orderEntity);
+        return orderRepository.saveAndFlush(orderEntity);
     }
 
     @Override
     public OrderEntity save(OrderEntity orderEntity) {
         return orderRepository.save(orderEntity);
     }
+
 
     @Override
     public Page<OrderEntity> findAll(Pageable pageable, Long userId) {
@@ -46,5 +46,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Optional<OrderEntity> findOne(Long id) {
         return orderRepository.findById(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return orderRepository.existsById(id);
     }
 }

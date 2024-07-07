@@ -14,12 +14,10 @@ import org.springframework.stereotype.Service;
 public class OrderDetailServiceImpl implements OrderDetailService {
 
     private final OrderDetailRepository orderDetailRepository;
-    private final OrderService orderService;
 
     @Autowired
-    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository, OrderService orderService) {
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository) {
         this.orderDetailRepository = orderDetailRepository;
-        this.orderService = orderService;
     }
 
     @Override

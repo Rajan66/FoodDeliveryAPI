@@ -11,6 +11,8 @@ import com.rajan.foodDeliveryApp.services.OrderDetailService;
 import com.rajan.foodDeliveryApp.services.OrderService;
 import com.rajan.foodDeliveryApp.services.RestaurantService;
 import com.rajan.foodDeliveryApp.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class OrderController {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
     private final UserService userService;
     private final RestaurantService restaurantService;
@@ -62,33 +67,37 @@ public class OrderController {
         return ordersListEntity.map(orderMapper::mapTo);
     }
 
-    @PostMapping("/{id}/orders")
-    public ResponseEntity<OrderDto> createOrder(@PathVariable("id") Long id, @RequestBody OrderDto orderDto) {
+    @PostMapping("/{user_id}/orders")
+    public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long user_id, @RequestBody OrderDto orderDto) {
+
+        if (orderService.isExists(orderDto.getId())) {
+            SecureRandom random = new SecureRandom(); // doesnt generate unique number
+            orderDto.setId(random.nextLong(100000));
+        }
+
         UserEntity orderUser = userService
-                .findOne(id)
+                .findOne(user_id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         RestaurantEntity orderRestaurant = restaurantService
                 .findOne(orderDto.getRestaurantId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
 
         OrderEntity orderEntity = orderMapper.mapFrom(orderDto);
-        orderEntity.setUser(orderUser);
-        orderEntity.setRestaurant(orderRestaurant);
+        orderEntity.setId(orderEntity.getId()); // Not the most optimal implementation
 
-        OrderEntity savedOrderEntity = orderService.save(orderEntity);
 
-        OrderEntity finalSavedOrderEntity = savedOrderEntity;
-        List<OrderDetailEntity> orderDetails = orderDto.getOrderDetails()
-                .stream()
-                .map(orderDetailDto -> {
-                    OrderDetailEntity newOrderDetail = orderDetailMapper.mapFrom(orderDetailDto);
-                    newOrderDetail.setOrder((finalSavedOrderEntity));
-                    return orderDetailService.save(newOrderDetail);
-                }).collect(Collectors.toList());
+        List<OrderDetailEntity> savedOrderDetails = new ArrayList<>();
+        for (OrderDetailDto orderDetailDto : orderDto.getOrderDetails()) {
+            OrderDetailEntity newOrderDetail = orderDetailMapper.mapFrom(orderDetailDto);
+            newOrderDetail.setOrderId(orderDto.getId());
+            OrderDetailEntity savedOrderDetail = orderDetailService.save(newOrderDetail);
+            savedOrderDetails.add(savedOrderDetail);
+        }
 
-        savedOrderEntity.setOrderDetails(orderDetails);
-        savedOrderEntity = orderService.save(savedOrderEntity);
+        orderEntity.setOrderDetails(savedOrderDetails);
 
+        OrderEntity savedOrderEntity = orderService.save(orderEntity, orderUser, orderRestaurant);
         OrderDto savedOrderDto = orderMapper.mapTo(savedOrderEntity);
 
         return new ResponseEntity<>(savedOrderDto, HttpStatus.CREATED);
