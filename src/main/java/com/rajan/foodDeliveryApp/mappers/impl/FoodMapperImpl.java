@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class FoodMapperImpl implements Mapper<FoodEntity, FoodDto> {
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    private ModelMapper modelMapper;
+    public FoodMapperImpl(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public FoodDto mapTo(FoodEntity foodEntity) {

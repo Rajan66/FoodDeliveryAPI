@@ -1,6 +1,8 @@
 package com.rajan.foodDeliveryApp.services.authentication;
 
 
+import com.rajan.foodDeliveryApp.domain.Role;
+import com.rajan.foodDeliveryApp.domain.dto.AuthenticationResponse;
 import com.rajan.foodDeliveryApp.domain.dto.LoginRequest;
 import com.rajan.foodDeliveryApp.domain.dto.RegisterRequest;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
@@ -24,19 +26,22 @@ public class AuthService {
     private final JwtService jwtService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void register(RegisterRequest registerRequest) {
+    public AuthenticationResponse register(RegisterRequest registerRequest) {
         UserEntity u = UserEntity.builder()
                 .email(registerRequest.getEmail())
                 .password(bCryptPasswordEncoder.encode(registerRequest.getPassword()))
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
+                .role(Role.USER)
                 .build();
         userRepository.save(u);
+
+        return AuthenticationResponse.builder().token(jwtService.generateToken(u)).build();
     }
 
-    public String login(LoginRequest loginRequest) {
+    public AuthenticationResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         UserEntity u = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return jwtService.generateToken(u);
+        return AuthenticationResponse.builder().token(jwtService.generateToken(u)).build();
     }
 }

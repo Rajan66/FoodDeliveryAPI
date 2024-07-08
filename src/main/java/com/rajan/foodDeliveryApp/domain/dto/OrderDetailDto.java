@@ -11,10 +11,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FoodDto {
+public class OrderDetailDto {
+    private Long id;
     private Long foodId;
-    private String name;
-    private String category;
+    private Long orderId;
+    private Integer quantity;
     private BigDecimal price;
-    private Long menuId;
+    private BigDecimal totalPrice;
+    private String notes;
+    private String status;
 }

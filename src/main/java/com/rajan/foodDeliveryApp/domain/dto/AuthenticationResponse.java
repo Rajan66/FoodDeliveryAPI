@@ -5,15 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class MenuDto {
-    private Long menuId;
-    private String name;
-    private RestaurantDto restaurant;
-    private List<FoodDto> foods;
+public class AuthenticationResponse {
+    private String token;
 }
