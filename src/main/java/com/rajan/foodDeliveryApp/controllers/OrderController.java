@@ -56,11 +56,6 @@ public class OrderController {
     }
 
 
-    @GetMapping("/users/{id}/orders/1")
-    public String hello() {
-        return "hello world";
-    }
-
     @GetMapping("/{id}/orders")
     public Page<OrderDto> listOrders(@PathVariable("id") Long id, Pageable pageable) {
         Page<OrderEntity> ordersListEntity = orderService.findAll(pageable, id);
@@ -69,11 +64,11 @@ public class OrderController {
 
     @PostMapping("/{user_id}/orders")
     public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long user_id, @RequestBody OrderDto orderDto) {
-
-        if (orderService.isExists(orderDto.getId())) {
-            SecureRandom random = new SecureRandom(); // doesnt generate unique number
-            orderDto.setId(random.nextLong(100000));
-        }
+//
+//        if (orderService.isExists(orderDto.getId())) {
+//            SecureRandom random = new SecureRandom(); // doesnt generate unique number
+//            orderDto.setId(random.nextLong(100000));
+//        }
 
         UserEntity orderUser = userService
                 .findOne(user_id)
@@ -84,20 +79,20 @@ public class OrderController {
 
 
         OrderEntity orderEntity = orderMapper.mapFrom(orderDto);
-        orderEntity.setId(orderEntity.getId()); // Not the most optimal implementation
-
+//        orderEntity.setId(orderDto.getId()); // Not the most optimal implementation
+        OrderEntity savedOrderEntity = orderService.save(orderEntity, orderUser, orderRestaurant);
 
         List<OrderDetailEntity> savedOrderDetails = new ArrayList<>();
         for (OrderDetailDto orderDetailDto : orderDto.getOrderDetails()) {
             OrderDetailEntity newOrderDetail = orderDetailMapper.mapFrom(orderDetailDto);
-            newOrderDetail.setOrderId(orderDto.getId());
+            newOrderDetail.setOrderId(savedOrderEntity);
             OrderDetailEntity savedOrderDetail = orderDetailService.save(newOrderDetail);
             savedOrderDetails.add(savedOrderDetail);
         }
 
         orderEntity.setOrderDetails(savedOrderDetails);
 
-        OrderEntity savedOrderEntity = orderService.save(orderEntity, orderUser, orderRestaurant);
+        savedOrderEntity = orderService.save(orderEntity);
         OrderDto savedOrderDto = orderMapper.mapTo(savedOrderEntity);
 
         return new ResponseEntity<>(savedOrderDto, HttpStatus.CREATED);

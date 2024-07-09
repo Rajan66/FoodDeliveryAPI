@@ -21,7 +21,8 @@ import java.util.Set;
 public class MenuEntity {
 
     @Id
-    private Long menu_id;
+    @Column(name = "menu_id")
+    private Long menuId;
 
     private String name;
 

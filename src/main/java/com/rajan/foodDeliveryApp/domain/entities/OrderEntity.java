@@ -20,6 +20,7 @@ public class OrderEntity {
 
     @Id
     @Column(name = "order_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_seq")
     private Long id;
 
     @ManyToOne

@@ -21,8 +21,9 @@ public class OrderDetailEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_details_id_seq")
     private Long id;
 
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Long orderId; // Not the most optimal implementation; no relation is created in the database for order and order details
+    private OrderEntity orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")

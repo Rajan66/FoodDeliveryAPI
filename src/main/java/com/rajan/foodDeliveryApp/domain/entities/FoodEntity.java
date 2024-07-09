@@ -17,7 +17,8 @@ import java.math.BigDecimal;
 public class FoodEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "food_id_seq")
-    private Long food_id;
+    @Column(name = "food_id")
+    private Long foodId;
 
     private String name;
 
@@ -26,5 +27,5 @@ public class FoodEntity {
     private BigDecimal price;
 
     @Column(name = "menu_id")
-    private Long menu_id;
+    private Long menuId;
 }

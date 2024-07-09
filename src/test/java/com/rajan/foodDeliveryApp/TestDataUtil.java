@@ -1,5 +1,7 @@
 package com.rajan.foodDeliveryApp;
 
+import com.rajan.foodDeliveryApp.domain.dto.FoodDto;
+import com.rajan.foodDeliveryApp.domain.dto.MenuDto;
 import com.rajan.foodDeliveryApp.domain.dto.RestaurantDto;
 import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
 
@@ -36,4 +38,23 @@ public final class TestDataUtil {
                 .cuisine("Burger")
                 .build();
     }
+
+    // Food Test Util
+    public static FoodDto createTestFoodDtoA(){
+        return FoodDto.builder()
+                .foodId(201)
+                .name("Buff Momo")
+                .category("Momo")
+                .price(200)
+                .build();
+    }
+
+//    public static MenuDto createTestMenuDtoA(){
+//        return MenuDto.builder()
+//                .menuId(10)
+//                .name("Breakfast Menu")
+//                .restaurant()
+//                .foods()
+//                .build();
+//    }
 }
