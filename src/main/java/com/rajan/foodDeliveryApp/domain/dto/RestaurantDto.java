@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 public class RestaurantDto {
     private Long restaurantId;
     private String name;
+    private String email;
     private String cuisine;
+    private Integer contact;
 }

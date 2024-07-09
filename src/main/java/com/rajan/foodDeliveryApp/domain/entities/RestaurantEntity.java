@@ -20,6 +20,10 @@ public class RestaurantEntity {
 
     private String name;
 
+    private String email;
+
     private String cuisine;
+
+    private Integer contact;
 
 }
