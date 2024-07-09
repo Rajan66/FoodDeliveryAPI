@@ -22,7 +22,7 @@ public class MenuEntity {
 
     @Id
     @Column(name = "menu_id")
-    private Long menuId;
+    private Long menu_id;
 
     private String name;
 

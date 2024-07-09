@@ -80,11 +80,11 @@ public class MenuController {
     @PatchMapping(path = "/restaurants/{restaurant_id}/menus/{id}")
     public ResponseEntity<MenuDto> addFoodToMenu(
             @PathVariable("id") Long id,
-            @PathVariable("restaurant_id") Long restaurant_id,
+            @PathVariable("restaurantId") Long restaurantId,
             @RequestBody MenuDto menuDto) {
         MenuEntity menuEntity = menuMapper.mapFrom(menuDto);
 
-        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findOne(restaurant_id);
+        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findOne(restaurantId);
         RestaurantEntity restaurantEntity = optionalRestaurantEntity.orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
         menuEntity.setMenu_id(id);
@@ -108,6 +108,14 @@ public class MenuController {
     public Page<MenuDto> listMenus(Pageable pageable) {
         Page<MenuEntity> menuEntities = menuService.findAll(pageable);
         return menuEntities.map(menuMapper::mapTo);
+    }
+
+    @GetMapping(path = "/menus/{id}")
+    public ResponseEntity<MenuDto> getMenu(@PathVariable("id") Long id) {
+        Optional<MenuEntity> optionalMenuEntity = menuService.findOne(id);
+        MenuEntity menuEntity = optionalMenuEntity.orElseThrow(() -> new IllegalArgumentException("Could not find"));
+        MenuDto menuDto = menuMapper.mapTo(menuEntity);
+        return new ResponseEntity<>(menuDto, HttpStatus.OK);
     }
 
     @GetMapping(path = "/restaurants/{restaurant_id}/menus")

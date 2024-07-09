@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -24,6 +26,6 @@ public class RestaurantEntity {
 
     private String cuisine;
 
-    private Integer contact;
+    private Long contact;
 
 }

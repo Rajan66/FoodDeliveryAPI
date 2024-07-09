@@ -59,7 +59,7 @@ public class FoodController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         FoodEntity foodEntity = foodMapper.mapFrom(foodDto);
-        foodEntity.setFoodId(id);
+        foodEntity.setFood_id(id);
         FoodEntity savedFoodEntity = foodService.save(foodEntity);
         FoodDto savedFoodDto = foodMapper.mapTo(savedFoodEntity);
         return new ResponseEntity<>(savedFoodDto, HttpStatus.OK);

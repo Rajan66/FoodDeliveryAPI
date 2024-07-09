@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderEntity save(OrderEntity orderEntity, UserEntity user, RestaurantEntity restaurant) {
         orderEntity.setUser(user);
         orderEntity.setRestaurant(restaurant);
-        return orderRepository.saveAndFlush(orderEntity);
+        return orderRepository.save(orderEntity);
     }
 
     @Override

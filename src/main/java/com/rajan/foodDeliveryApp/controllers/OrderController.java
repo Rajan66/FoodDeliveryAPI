@@ -63,36 +63,35 @@ public class OrderController {
     }
 
     @PostMapping("/{user_id}/orders")
-    public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long user_id, @RequestBody OrderDto orderDto) {
-//
-//        if (orderService.isExists(orderDto.getId())) {
-//            SecureRandom random = new SecureRandom(); // doesnt generate unique number
-//            orderDto.setId(random.nextLong(100000));
-//        }
+    public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long userId, @RequestBody OrderDto orderDto) {
 
         UserEntity orderUser = userService
-                .findOne(user_id)
+                .findOne(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         RestaurantEntity orderRestaurant = restaurantService
                 .findOne(orderDto.getRestaurantId())
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-
         OrderEntity orderEntity = orderMapper.mapFrom(orderDto);
-//        orderEntity.setId(orderDto.getId()); // Not the most optimal implementation
+        orderEntity.setOrderDetails(null);
         OrderEntity savedOrderEntity = orderService.save(orderEntity, orderUser, orderRestaurant);
+
+        log.info(String.valueOf(savedOrderEntity.getOrderDetails()));
+        log.info(String.valueOf(savedOrderEntity));
 
         List<OrderDetailEntity> savedOrderDetails = new ArrayList<>();
         for (OrderDetailDto orderDetailDto : orderDto.getOrderDetails()) {
             OrderDetailEntity newOrderDetail = orderDetailMapper.mapFrom(orderDetailDto);
-            newOrderDetail.setOrderId(savedOrderEntity);
-            OrderDetailEntity savedOrderDetail = orderDetailService.save(newOrderDetail);
-            savedOrderDetails.add(savedOrderDetail);
+            newOrderDetail.setOrderId(savedOrderEntity.getId());
+            savedOrderDetails.add(newOrderDetail);
         }
 
-        orderEntity.setOrderDetails(savedOrderDetails);
+        log.info(savedOrderDetails.toString());
 
-        savedOrderEntity = orderService.save(orderEntity);
+        List<OrderDetailEntity> savedOrderDetailsList = orderDetailService.saveAll(savedOrderDetails);
+        savedOrderEntity.setOrderDetails(savedOrderDetailsList);
+
+        savedOrderEntity = orderService.save(savedOrderEntity);
         OrderDto savedOrderDto = orderMapper.mapTo(savedOrderEntity);
 
         return new ResponseEntity<>(savedOrderDto, HttpStatus.CREATED);

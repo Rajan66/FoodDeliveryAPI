@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -35,8 +36,7 @@ public class OrderEntity {
     @JoinColumn(name = "partner_id")
     private DeliveryPartnerEntity partner;
 
-    // id refers to the order_id
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetailEntity> orderDetails;
 
     @Column(name = "order_date")
