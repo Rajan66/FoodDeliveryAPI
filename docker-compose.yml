@@ -4,6 +4,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: food
-      POSTGRES_USER: rajan
-      POSTGRES_PASSWORD: password
+      POSTGRES_URL: jdbc:postgresql://dpg-cqamcuggph6c73f6hucg-a/fooddelivery_ut97
+      POSTGRES_DB: fooddelivery_ut97
+      POSTGRES_USER: fooddelivery_ut97_user
+      POSTGRES_PASSWORD: wHpEa9Z8gBjAro8gSArOaZguynS58WYs
+
