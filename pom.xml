@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.rajan</groupId>
     <artifactId>foodDeliveryApp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1</version>
     <name>foodDeliveryApp</name>
     <description>A Restaurant Ordering System</description>
     <properties>
