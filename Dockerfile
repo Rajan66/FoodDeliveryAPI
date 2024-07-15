@@ -12,6 +12,6 @@ RUN ./mvnw clean package
 
 FROM openjdk:17
 EXPOSE 8080
-COPY --from=build /build/libs/foodDeliveryApp-1.jar app.jar
+COPY --from=build /app/target/foodDeliveryApp-1.jar app.jar
 
 ENTRYPOINT ["java","-jar","app.jar"]
