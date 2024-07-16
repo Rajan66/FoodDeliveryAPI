@@ -11,6 +11,7 @@ RUN chmod +x mvnw
 RUN ./mvnw clean package
 
 FROM openjdk:17
+EXPOSE 10000
 COPY --from=build /app/target/foodDeliveryApp-1.jar app.jar
 
 ENTRYPOINT ["java","-jar","app.jar"]

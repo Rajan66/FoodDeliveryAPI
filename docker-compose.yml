@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "10000:10000"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cqamcuggph6c73f6hucg-a.singapore-postgres.render.com:5432/fooddelivery_ut97
       SPRING_DATASOURCE_USERNAME: fooddelivery_ut97_user
