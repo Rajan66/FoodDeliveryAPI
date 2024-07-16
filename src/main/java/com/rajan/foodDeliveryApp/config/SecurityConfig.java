@@ -26,10 +26,18 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
+    /**
+     * Considerations for Disabling CSRF
+     * Disabling CSRF protection can make your application vulnerable to CSRF attacks.
+     * However, in some cases, especially for stateless applications (e.g., RESTful APIs)
+     * that use JWT for authentication, CSRF protection may not be necessary.
+     * JWT tokens are generally sent as headers, which are not susceptible to CSRF attacks.
+     */
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
@@ -45,7 +53,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public CorsFilter corsFilter() {
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
@@ -53,6 +61,6 @@ public class SecurityConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/api/**", config);
-        return new CorsFilter(source);
+        return source;
     }
 }
