@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: postgresql://fooddelivery_ut97_user:wHpEa9Z8gBjAro8gSArOaZguynS58WYs@dpg-cqamcuggph6c73f6hucg-a.singapore-postgres.render.com/fooddelivery_ut97
+      SPRING_DATASOURCE_USERNAME: fooddelivery_ut97_user
+      SPRING_DATASOURCE_PASSWORD: wHpEa9Z8gBjAro8gSArOaZguynS58WYs
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: fooddelivery_ut97
+      POSTGRES_USER: fooddelivery_ut97_user
+      POSTGRES_PASSWORD: wHpEa9Z8gBjAro8gSArOaZguynS58WYs
