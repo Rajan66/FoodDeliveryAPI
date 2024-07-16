@@ -1,7 +1,7 @@
 ## **Food Ordering System API**
 As the name suggests, it's an api for an online food ordering system, built using Spring Boot, Hibernate, Docker and PostgreSQL.
 
-// *Yet to write test cases, but cleared out of some test cases.*<br/>
+*Yet to write test cases, but cleared out of some test cases.*<br/>
 For unit testing of Service layer, I've used JUnit and Mockito.
 For intergration testing, I've used Spring MockMVC.
 
