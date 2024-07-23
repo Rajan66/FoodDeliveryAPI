@@ -4,9 +4,19 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "7000:7000"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cqamcuggph6c73f6hucg-a.singapore-postgres.render.com:5432/fooddelivery_ut97
       SPRING_DATASOURCE_USERNAME: fooddelivery_ut97_user
       SPRING_DATASOURCE_PASSWORD: wHpEa9Z8gBjAro8gSArOaZguynS58WYs
-      PORT: 7000
+#    depends_on:
+#      - db
+#
+#  db:
+#    image: postgres:latest
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_DB: food
+#      POSTGRES_USER: rajan
+#      POSTGRES_PASSWORD: rajan123
