@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "20301:20301"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://bitebuddy-81-bitebuddy-81.l.aivencloud.com:20301/defaultdb
       SPRING_DATASOURCE_USERNAME: avnadmin
