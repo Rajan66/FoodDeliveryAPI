@@ -16,8 +16,8 @@ services:
 #  db:
 #    image: postgres:latest
 #    ports:
-#      - "5432:5432"
+#      - "2031:2031"
 #    environment:
-#      POSTGRES_DB: food
+#      POSTGRES_DB: defaultdb
 #      POSTGRES_USER: rajan
 #      POSTGRES_PASSWORD: rajan123

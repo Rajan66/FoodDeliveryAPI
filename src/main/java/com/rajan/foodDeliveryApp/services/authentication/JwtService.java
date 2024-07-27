@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 
@@ -53,14 +56,15 @@ public class JwtService {
     }
 
     public String generateToken(UserEntity u) {
-        return createToken(u.getEmail());
+        return createToken(u.getEmail(), u.getRole().toString());
     }
 
-    private String createToken(String email) {
+    public String createToken(String email, String role) {
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .expiration(new Date(System.currentTimeMillis()))
                 .signWith(getSigningKey())
                 .compact();
     }

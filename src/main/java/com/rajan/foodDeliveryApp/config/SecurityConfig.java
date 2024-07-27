@@ -21,7 +21,6 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/api/auth/login",
             "/api/auth/register",
-            "/api/restaurants",
     };
 
     private final JwtAuthFilter jwtAuthFilter;
