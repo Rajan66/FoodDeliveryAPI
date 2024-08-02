@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class MenuController {
         this.foodService = foodService;
     }
 
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @PostMapping(path = "/restaurants/{restaurant_id}/menus/{id}")
     public ResponseEntity<MenuDto> createMenu(
             @PathVariable("id") Long id,
@@ -51,7 +53,11 @@ public class MenuController {
 
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findOne(restaurant_id);
         RestaurantEntity restaurantEntity = optionalRestaurantEntity.orElseThrow(() -> new RuntimeException("Restaurant not found"));
-
+        /* TODO create a menu first then add food on another page,
+            create menu then addFood takes in one food at a time. (requires a lot of requests)
+            eg: list of 20 foods, 20 requests for one restaurant, 10 restaurant * 20 requests = 200 requests = server overhead
+            or take a list and add each item to the db. (bulk entry)
+        * */
         menuEntity.setMenu_id(id);
         menuEntity.setRestaurant(restaurantEntity);
 
@@ -77,6 +83,7 @@ public class MenuController {
         return new ResponseEntity<>(savedMenuDto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @PatchMapping(path = "/restaurants/{restaurant_id}/menus/{id}")
     public ResponseEntity<MenuDto> addFoodToMenu(
             @PathVariable("id") Long id,
@@ -104,6 +111,7 @@ public class MenuController {
         return new ResponseEntity<>(savedMenuDto, HttpStatus.NO_CONTENT);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path = "/menus")
     public Page<MenuDto> listMenus(Pageable pageable) {
         Page<MenuEntity> menuEntities = menuService.findAll(pageable);

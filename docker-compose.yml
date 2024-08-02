@@ -6,17 +6,18 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cqamcuggph6c73f6hucg-a.singapore-postgres.render.com:5432/fooddelivery_ut97
-      SPRING_DATASOURCE_USERNAME: fooddelivery_ut97_user
-      SPRING_DATASOURCE_PASSWORD: wHpEa9Z8gBjAro8gSArOaZguynS58WYs
+      SPRING_DATASOURCE_URL: jdbc:postgresql://bitebuddy-81-bitebuddy-81.l.aivencloud.com:20301/defaultdb
+      SPRING_DATASOURCE_USERNAME: avnadmin
+      SPRING_DATASOURCE_PASSWORD: AVNS_0uKm1L-2HO-DCxgKlsq
+
 #    depends_on:
 #      - db
 #
 #  db:
 #    image: postgres:latest
 #    ports:
-#      - "5432:5432"
+#      - "2031:2031"
 #    environment:
-#      POSTGRES_DB: food
+#      POSTGRES_DB: defaultdb
 #      POSTGRES_USER: rajan
 #      POSTGRES_PASSWORD: rajan123

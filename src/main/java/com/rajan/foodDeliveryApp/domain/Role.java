@@ -2,5 +2,6 @@ package com.rajan.foodDeliveryApp.domain;
 
 public enum Role {
     USER,
-    ADMIN
+    ADMIN,
+    RESTAURANT
 }

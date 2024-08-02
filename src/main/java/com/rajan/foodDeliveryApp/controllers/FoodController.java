@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class FoodController {
         this.foodService = foodService;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @PostMapping(path = "")
     public ResponseEntity<FoodDto> createFood(@RequestBody FoodDto foodDto) {
         FoodEntity foodEntity = foodMapper.mapFrom(foodDto);
@@ -37,6 +38,8 @@ public class FoodController {
         return new ResponseEntity<>(savedFoodDto, HttpStatus.CREATED);
     }
 
+    //TODO restaurant specific listOfFoods required
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path = "")
     public Page<FoodDto> listFoods(Pageable pageable) {
         Page<FoodEntity> foodEntities = foodService.findAll(pageable);
@@ -52,7 +55,8 @@ public class FoodController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-
+    //TODO also need to require restaurant id that has the food instead of role
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<FoodDto> updateFood(@PathVariable("id") Long id, @RequestBody FoodDto foodDto) {
         if (!foodService.isExists(id)) {
@@ -64,7 +68,8 @@ public class FoodController {
         FoodDto savedFoodDto = foodMapper.mapTo(savedFoodEntity);
         return new ResponseEntity<>(savedFoodDto, HttpStatus.OK);
     }
-
+    //TODO also need to require restaurant id that has the food instead of role
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<FoodDto> deleteFood(@PathVariable("id") Long id) {
         if (!foodService.isExists(id)) {

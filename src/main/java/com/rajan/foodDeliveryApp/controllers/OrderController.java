@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
@@ -55,13 +56,15 @@ public class OrderController {
         this.orderDetailMapper = orderDetailMapper;
     }
 
-
+    // TODO this require user specific access, admin and other users can't access them
     @GetMapping("/{id}/orders")
     public Page<OrderDto> listOrders(@PathVariable("id") Long id, Pageable pageable) {
         Page<OrderEntity> ordersListEntity = orderService.findAll(pageable, id);
         return ordersListEntity.map(orderMapper::mapTo);
     }
 
+    // TODO other roles like admin can't create orders for better security
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/{user_id}/orders")
     public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long userId, @RequestBody OrderDto orderDto) {
 

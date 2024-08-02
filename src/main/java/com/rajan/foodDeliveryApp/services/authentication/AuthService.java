@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -35,13 +37,28 @@ public class AuthService {
                 .role(Role.USER)
                 .build();
         userRepository.save(u);
+        String token = jwtService.generateToken(u);
+        Date issuedAt = jwtService.getIssuedDate(token);
+        Date expirationDate = jwtService.getExpirationDate(token);
 
-        return AuthenticationResponse.builder().token(jwtService.generateToken(u)).build();
+        return AuthenticationResponse.builder()
+                .token(token)
+                .issuedDate(issuedAt)
+                .expirationDate(expirationDate)
+                .build();
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         UserEntity u = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return AuthenticationResponse.builder().token(jwtService.generateToken(u)).build();
+        String token = jwtService.generateToken(u);
+        Date issuedAt = jwtService.getIssuedDate(token);
+        Date expirationDate = jwtService.getExpirationDate(token);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .issuedDate(issuedAt)
+                .expirationDate(expirationDate)
+                .build();
     }
 }
