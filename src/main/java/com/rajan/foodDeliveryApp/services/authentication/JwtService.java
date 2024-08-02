@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     @Value("${jwt.secret}")
     private String secret;
 
@@ -66,18 +69,21 @@ public class JwtService {
         return extractClaim(jwtToken, Claims::getExpiration);
     }
 
+    public String extractRole(String jwtToken) {
+        return extractClaim(jwtToken, claims -> claims.get("role", String.class));
+    }
+
     public String generateToken(UserEntity u) {
         return createToken(u.getEmail(), u.getRole().toString());
     }
 
     public String createToken(String email, String role) {
         final long validityInMilliseconds = 1000 * 60 * 60 * 60; // 10 hours validity
-
         return Jwts.builder()
                 .subject(email)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+validityInMilliseconds))
+                .expiration(new Date(System.currentTimeMillis() + validityInMilliseconds))
                 .signWith(getSigningKey())
                 .compact();
     }

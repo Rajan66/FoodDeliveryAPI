@@ -11,11 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/restaurants")
@@ -47,6 +46,7 @@ public class RestaurantController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(path = "")
     public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantDto restaurantDto) {
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
@@ -55,6 +55,7 @@ public class RestaurantController {
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable("id") Long id, @RequestBody RestaurantDto restaurantDto) {
         if (!restaurantService.isExists(id)) {
@@ -67,6 +68,7 @@ public class RestaurantController {
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<RestaurantDto> deleteRestaurant(@PathVariable("id") Long id) {
         if (!restaurantService.isExists(id)) {
