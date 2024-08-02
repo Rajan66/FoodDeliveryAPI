@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +34,14 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public Page<UserDto> listUsers(Pageable pageable) {
         Page<UserEntity> usersList = userService.findAll(pageable);
         return usersList.map(userMapper::mapTo);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
         if (userService.isExists(id)) {
@@ -49,7 +51,7 @@ public class UserController {
         UserEntity updatedUser = userService.save(userEntity);
         return ResponseEntity.ok(userMapper.mapTo(updatedUser));
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long id) {
         if (userService.isExists(id)) {
