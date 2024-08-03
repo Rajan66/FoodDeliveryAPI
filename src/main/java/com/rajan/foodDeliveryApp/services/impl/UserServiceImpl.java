@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
     public UserEntity save(UserEntity user) {
         return userRepository.save(user);
@@ -45,6 +44,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isExists(Long id) {
         return userRepository.existsById(id);
+    }
+
+    @Override
+    public boolean isExistsByEmail(String email) {
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        return user.isPresent();
     }
 
     @Override

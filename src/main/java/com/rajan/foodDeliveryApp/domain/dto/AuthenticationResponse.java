@@ -16,4 +16,10 @@ public class AuthenticationResponse {
     private String token;
     private Date issuedDate;
     private Date expirationDate;
+    private String errorMessage;
+
+
+    public AuthenticationResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }
