@@ -10,13 +10,15 @@ public interface UserService {
 
     UserEntity save(UserEntity user);
 
-    UserEntity save(UserEntity user,Long id);
+    UserEntity save(UserEntity user, Long id);
 
     Page<UserEntity> findAll(Pageable pageable);
 
     Optional<UserEntity> findOne(Long id);
 
     boolean isExists(Long id);
+
+    boolean isExistsByEmail(String email);
 
     void delete(Long id);
 

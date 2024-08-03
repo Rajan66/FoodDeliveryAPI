@@ -64,7 +64,6 @@ public class OrderController {
     }
 
     // TODO other roles like admin can't create orders for better security
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/{user_id}/orders")
     public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long userId, @RequestBody OrderDto orderDto) {
 

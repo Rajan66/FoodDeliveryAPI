@@ -1,5 +1,6 @@
 package com.rajan.foodDeliveryApp.controllers;
 
+import com.rajan.foodDeliveryApp.domain.dto.RestaurantDto;
 import com.rajan.foodDeliveryApp.domain.dto.UserDto;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
@@ -14,10 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,6 +37,19 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
+        if (!userService.isExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        Optional<UserEntity> userEntity = userService.findOne(id);
+        return userEntity.map(user -> {
+            UserDto userDto = userMapper.mapTo(user);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public Page<UserDto> listUsers(Pageable pageable) {
@@ -44,17 +60,18 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
-        if (userService.isExists(id)) {
+        if (!userService.isExists(id)) {
             return ResponseEntity.notFound().build();
         }
         UserEntity userEntity = userMapper.mapFrom(userDto);
         UserEntity updatedUser = userService.save(userEntity);
         return ResponseEntity.ok(userMapper.mapTo(updatedUser));
     }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long id) {
-        if (userService.isExists(id)) {
+        if (!userService.isExists(id)) {
             return ResponseEntity.notFound().build();
         }
         userService.delete(id);
