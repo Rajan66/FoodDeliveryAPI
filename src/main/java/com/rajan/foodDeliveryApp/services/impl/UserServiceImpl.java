@@ -3,8 +3,6 @@ package com.rajan.foodDeliveryApp.services.impl;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.repositories.UserRepository;
 import com.rajan.foodDeliveryApp.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +19,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     @Override
     public UserEntity save(UserEntity user) {

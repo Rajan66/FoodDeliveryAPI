@@ -1,6 +1,5 @@
 package com.rajan.foodDeliveryApp.controllers;
 
-
 import com.rajan.foodDeliveryApp.domain.dto.AuthenticationResponse;
 import com.rajan.foodDeliveryApp.domain.dto.LoginRequest;
 import com.rajan.foodDeliveryApp.domain.dto.RegisterRequest;
