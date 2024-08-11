@@ -1,8 +1,10 @@
 package com.rajan.foodDeliveryApp.services.impl;
 
+import com.rajan.foodDeliveryApp.config.Patcher;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.repositories.UserRepository;
 import com.rajan.foodDeliveryApp.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +16,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final Patcher patcher;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, Patcher patcher) {
         this.userRepository = userRepository;
+        this.patcher = patcher;
     }
 
 
@@ -29,7 +33,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity save(UserEntity user, Long id) {
         user.setId(id);
-        return userRepository.save(user);
+        UserEntity existingUser = findOne(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        try {
+            patcher.userPatcher(existingUser, user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return userRepository.save(existingUser);
     }
 
     @Override

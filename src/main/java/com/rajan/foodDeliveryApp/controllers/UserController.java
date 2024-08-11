@@ -47,8 +47,9 @@ public class UserController {
         if (userService.isExists(id)) {
             return ResponseEntity.notFound().build();
         }
+//        userDto.setId(id);
         UserEntity userEntity = userMapper.mapFrom(userDto);
-        UserEntity updatedUser = userService.save(userEntity);
+        UserEntity updatedUser = userService.save(userEntity, id);
         return ResponseEntity.ok(userMapper.mapTo(updatedUser));
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
