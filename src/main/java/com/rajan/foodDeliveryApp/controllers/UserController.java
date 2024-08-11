@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -28,6 +30,19 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
+        if (!userService.isExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        Optional<UserEntity> userEntity = userService.findOne(id);
+        return userEntity.map(user -> {
+            UserDto userDto = userMapper.mapTo(user);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public Page<UserDto> listUsers(Pageable pageable) {
@@ -38,17 +53,18 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
-        if (userService.isExists(id)) {
+        if (!userService.isExists(id)) {
             return ResponseEntity.notFound().build();
         }
         UserEntity userEntity = userMapper.mapFrom(userDto);
-        UserEntity updatedUser = userService.save(userEntity);
+        UserEntity updatedUser = userService.save(userEntity, id);
         return ResponseEntity.ok(userMapper.mapTo(updatedUser));
     }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long id) {
-        if (userService.isExists(id)) {
+        if (!userService.isExists(id)) {
             return ResponseEntity.notFound().build();
         }
         userService.delete(id);

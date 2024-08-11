@@ -1,6 +1,5 @@
 package com.rajan.foodDeliveryApp.services;
 
-import com.rajan.foodDeliveryApp.domain.dto.OrderDto;
 import com.rajan.foodDeliveryApp.domain.entities.OrderEntity;
 import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;

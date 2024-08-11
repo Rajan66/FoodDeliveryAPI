@@ -1,14 +1,11 @@
 package com.rajan.foodDeliveryApp.domain.entities;
 
-
 import com.rajan.foodDeliveryApp.domain.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +31,8 @@ public class UserEntity implements UserDetails {
     private String firstName;
 
     private String lastName;
+
+    private String contact;
 
     @Enumerated(EnumType.STRING)
     private Role role;
