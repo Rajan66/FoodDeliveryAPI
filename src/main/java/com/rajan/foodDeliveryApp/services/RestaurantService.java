@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface RestaurantService {
     RestaurantEntity save(RestaurantEntity restaurantEntity);
 
+    RestaurantEntity save(RestaurantEntity restaurantEntity,Long id);
+
     Optional<RestaurantEntity> findOne(Long id);
 
     Page<RestaurantEntity> findAll(Pageable pageable);

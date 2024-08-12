@@ -24,6 +24,7 @@ public class SecurityConfig {
             "/api/auth/login",
             "/api/auth/register",
             "/api/restaurants",
+            "/api/restaurants/{id}",
     };
 
     private final JwtAuthFilter jwtAuthFilter;
