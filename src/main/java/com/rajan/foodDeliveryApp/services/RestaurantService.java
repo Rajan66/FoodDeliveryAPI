@@ -19,4 +19,5 @@ public interface RestaurantService {
 
     boolean isExists(Long id);
 
+    String encodeImage(byte[] imageData);
 }

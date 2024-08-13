@@ -2,7 +2,6 @@ package com.rajan.foodDeliveryApp.services.impl;
 
 import com.rajan.foodDeliveryApp.config.impl.RestaurantPatcher;
 import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
-import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.repositories.RestaurantRepository;
 import com.rajan.foodDeliveryApp.services.RestaurantService;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -66,4 +66,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     public boolean isExists(Long id) {
         return restaurantRepository.existsById(id);
     }
+
+    @Override
+    public String encodeImage(byte[] imageData) {
+        return Base64.getEncoder().encodeToString(imageData);
+    }
+
 }

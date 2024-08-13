@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -33,8 +34,15 @@ public class RestaurantController {
 
     @GetMapping(path = "")
     public Page<RestaurantDto> listRestaurants(Pageable pageable) {
-        Page<RestaurantEntity> restaurantEntity = restaurantService.findAll(pageable);
-        return restaurantEntity.map(restaurantMapper::mapTo);
+        Page<RestaurantEntity> restaurantEntityPage = restaurantService.findAll(pageable);
+        return restaurantEntityPage.map(restaurantEntity -> {
+            RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
+            String base64Image = restaurantEntity.getImageData() != null
+                    ? restaurantService.encodeImage(restaurantEntity.getImageData())
+                    : null;
+            restaurantDto.setImageData(base64Image);
+            return restaurantDto;
+        });
     }
 
     @GetMapping(path = "/{id}")
@@ -42,28 +50,45 @@ public class RestaurantController {
         Optional<RestaurantEntity> foundRestaurant = restaurantService.findOne(id);
         return foundRestaurant.map(restaurantEntity -> {
             RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
+            String base64Image = restaurantEntity.getImageData() != null
+                    ? restaurantService.encodeImage(restaurantEntity.getImageData())
+                    : null;
+            restaurantDto.setImageData(base64Image);
             return new ResponseEntity<>(restaurantDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(path = "")
-    public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantDto restaurantDto) {
+    public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantDto restaurantDto) throws IOException {
+
+
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
+        if (restaurantDto.getImageData() != null) {
+            byte[] imageData = restaurantDto.getImageData().getBytes();
+            restaurantEntity.setImageData(imageData);
+        }
         RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity);
         RestaurantDto savedRestaurantDto = restaurantMapper.mapTo(savedRestaurantEntity);
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable("id") Long id, @RequestBody RestaurantDto restaurantDto) {
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable("id") Long id,
+                                                          @RequestBody RestaurantDto restaurantDto
+    ) throws IOException {
         if (!restaurantService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
         restaurantEntity.setRestaurantId(id);
-        RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity);
+        if (restaurantDto.getImageData() != null) {
+            byte[] imageData = restaurantDto.getImageData().getBytes();
+            restaurantEntity.setImageData(imageData);
+        }
+
+        RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity, id);
         RestaurantDto savedRestaurantDto = restaurantMapper.mapTo(savedRestaurantEntity);
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.OK);
     }
