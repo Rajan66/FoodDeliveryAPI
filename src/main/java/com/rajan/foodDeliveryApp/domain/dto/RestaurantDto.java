@@ -16,4 +16,8 @@ public class RestaurantDto {
     private String cuisine;
     private String contact;
     private String image;
+    private String address;
+    private String description;
+    private String status;
+
 }

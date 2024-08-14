@@ -47,7 +47,8 @@ public class AuthService {
                 .password(bCryptPasswordEncoder.encode(registerRequest.getPassword()))
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
-                .role(Role.USER)
+                .role(registerRequest.getRole() != null? registerRequest.getRole() : Role.USER)
+                .contact(registerRequest.getContact())
                 .build();
         userRepository.save(u);
         UserDto userDto = userMapper.mapTo(u);
