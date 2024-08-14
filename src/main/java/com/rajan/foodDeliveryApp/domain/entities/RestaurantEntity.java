@@ -26,6 +26,10 @@ public class RestaurantEntity {
 
     private String contact;
 
-    @Column(name = "imageUrl")
-    private String imageUrl;
+    private String address;
+
+    private String description;
+
+    @Column(name = "image")
+    private String image;
 }

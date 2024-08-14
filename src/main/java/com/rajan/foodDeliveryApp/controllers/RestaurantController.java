@@ -34,13 +34,12 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
-
     @GetMapping(path = "")
     public Page<RestaurantDto> listRestaurants(Pageable pageable) {
         Page<RestaurantEntity> restaurantEntityPage = restaurantService.findAll(pageable);
         return restaurantEntityPage.map(restaurantEntity -> {
             RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
-            restaurantDto.setImage(restaurantEntity.getImageUrl());
+            restaurantDto.setImage(restaurantEntity.getImage());
             return restaurantDto;
         });
     }
@@ -50,7 +49,7 @@ public class RestaurantController {
         Optional<RestaurantEntity> foundRestaurant = restaurantService.findOne(id);
         return foundRestaurant.map(restaurantEntity -> {
             RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
-            restaurantDto.setImage(restaurantEntity.getImageUrl());
+            restaurantDto.setImage(restaurantEntity.getImage());
             return new ResponseEntity<>(restaurantDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -59,12 +58,6 @@ public class RestaurantController {
     @PostMapping(path = "")
     public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantDto restaurantDto) throws IOException {
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
-        if (restaurantDto.getImage() != null) {
-            /*
-            byte[] imageData = restaurantDto.getImage().getBytes();
-            restaurantEntity.setImageUrl(imageData);*/
-            log.info(restaurantEntity.getImageUrl());
-        }
         RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity);
         RestaurantDto savedRestaurantDto = restaurantMapper.mapTo(savedRestaurantEntity);
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.CREATED);
@@ -80,11 +73,6 @@ public class RestaurantController {
         }
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
         restaurantEntity.setRestaurantId(id);
-        if (restaurantDto.getImage() != null) {
-            byte[] imageData = restaurantDto.getImage().getBytes();
-            restaurantEntity.setImageUrl(restaurantEntity.getImageUrl());
-        }
-
         RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity, id);
         RestaurantDto savedRestaurantDto = restaurantMapper.mapTo(savedRestaurantEntity);
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.OK);
