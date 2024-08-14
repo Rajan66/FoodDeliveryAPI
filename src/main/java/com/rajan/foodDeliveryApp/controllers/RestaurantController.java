@@ -6,6 +6,8 @@ import com.rajan.foodDeliveryApp.mappers.Mapper;
 import com.rajan.foodDeliveryApp.mappers.impl.RestaurantMapperImpl;
 import com.rajan.foodDeliveryApp.services.RestaurantService;
 import com.rajan.foodDeliveryApp.services.impl.RestaurantServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @RequestMapping(path = "/api/restaurants")
 public class RestaurantController {
 
+    private static final Logger log = LoggerFactory.getLogger(RestaurantController.class);
     private final Mapper<RestaurantEntity, RestaurantDto> restaurantMapper;
 
     private final RestaurantService restaurantService;
@@ -37,10 +40,7 @@ public class RestaurantController {
         Page<RestaurantEntity> restaurantEntityPage = restaurantService.findAll(pageable);
         return restaurantEntityPage.map(restaurantEntity -> {
             RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
-            String base64Image = restaurantEntity.getImageData() != null
-                    ? restaurantService.encodeImage(restaurantEntity.getImageData())
-                    : null;
-            restaurantDto.setImageData(base64Image);
+            restaurantDto.setImage(restaurantEntity.getImageUrl());
             return restaurantDto;
         });
     }
@@ -50,10 +50,7 @@ public class RestaurantController {
         Optional<RestaurantEntity> foundRestaurant = restaurantService.findOne(id);
         return foundRestaurant.map(restaurantEntity -> {
             RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
-            String base64Image = restaurantEntity.getImageData() != null
-                    ? restaurantService.encodeImage(restaurantEntity.getImageData())
-                    : null;
-            restaurantDto.setImageData(base64Image);
+            restaurantDto.setImage(restaurantEntity.getImageUrl());
             return new ResponseEntity<>(restaurantDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -61,12 +58,12 @@ public class RestaurantController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(path = "")
     public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantDto restaurantDto) throws IOException {
-
-
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
-        if (restaurantDto.getImageData() != null) {
-            byte[] imageData = restaurantDto.getImageData().getBytes();
-            restaurantEntity.setImageData(imageData);
+        if (restaurantDto.getImage() != null) {
+            /*
+            byte[] imageData = restaurantDto.getImage().getBytes();
+            restaurantEntity.setImageUrl(imageData);*/
+            log.info(restaurantEntity.getImageUrl());
         }
         RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity);
         RestaurantDto savedRestaurantDto = restaurantMapper.mapTo(savedRestaurantEntity);
@@ -83,9 +80,9 @@ public class RestaurantController {
         }
         RestaurantEntity restaurantEntity = restaurantMapper.mapFrom(restaurantDto);
         restaurantEntity.setRestaurantId(id);
-        if (restaurantDto.getImageData() != null) {
-            byte[] imageData = restaurantDto.getImageData().getBytes();
-            restaurantEntity.setImageData(imageData);
+        if (restaurantDto.getImage() != null) {
+            byte[] imageData = restaurantDto.getImage().getBytes();
+            restaurantEntity.setImageUrl(restaurantEntity.getImageUrl());
         }
 
         RestaurantEntity savedRestaurantEntity = restaurantService.save(restaurantEntity, id);

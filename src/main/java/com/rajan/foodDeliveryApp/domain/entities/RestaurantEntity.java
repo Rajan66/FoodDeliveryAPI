@@ -26,7 +26,6 @@ public class RestaurantEntity {
 
     private String contact;
 
-    @Lob
-    @Column(name = "image_data")
-    private byte[] imageData;
+    @Column(name = "imageUrl")
+    private String imageUrl;
 }

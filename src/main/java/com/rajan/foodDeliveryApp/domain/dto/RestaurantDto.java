@@ -15,5 +15,5 @@ public class RestaurantDto {
     private String email;
     private String cuisine;
     private String contact;
-    private String imageData;
+    private String image;
 }
