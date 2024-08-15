@@ -46,7 +46,6 @@ public class FoodController {
         return foodEntities.map(foodMapper::mapTo);
     }
 
-    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @GetMapping(path = "/menu/{id}")
     public Page<FoodDto> listMenuFoods(@PathVariable("id") Long id, Pageable pageable) {
         Page<FoodEntity> foodEntities = foodService.findAllByMenu(id, pageable);
