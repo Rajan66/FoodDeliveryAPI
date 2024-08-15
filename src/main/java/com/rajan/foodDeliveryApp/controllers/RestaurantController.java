@@ -67,7 +67,7 @@ public class RestaurantController {
         return new ResponseEntity<>(savedRestaurantDto, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_RESTAURANT')")
     @PatchMapping(path = "/{id}")
     public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable("id") Long id,
                                                           @RequestBody RestaurantDto restaurantDto
