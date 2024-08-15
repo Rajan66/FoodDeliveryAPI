@@ -27,4 +27,5 @@ public class RestaurantEntity {
     private String status;
     @Column(name = "image")
     private String image;
+    private Double averagePrice;
 }

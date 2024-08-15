@@ -19,5 +19,5 @@ public class RestaurantDto {
     private String address;
     private String description;
     private String status;
-
+    private Integer averagePrice;
 }
