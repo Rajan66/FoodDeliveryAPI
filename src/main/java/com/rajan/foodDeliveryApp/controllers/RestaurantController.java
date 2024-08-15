@@ -2,9 +2,11 @@ package com.rajan.foodDeliveryApp.controllers;
 
 import com.rajan.foodDeliveryApp.domain.dto.RestaurantDto;
 import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
+import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
 import com.rajan.foodDeliveryApp.mappers.impl.RestaurantMapperImpl;
 import com.rajan.foodDeliveryApp.services.RestaurantService;
+import com.rajan.foodDeliveryApp.services.UserService;
 import com.rajan.foodDeliveryApp.services.impl.RestaurantServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +29,13 @@ public class RestaurantController {
     private final Mapper<RestaurantEntity, RestaurantDto> restaurantMapper;
 
     private final RestaurantService restaurantService;
+    private final UserService userService;
 
     @Autowired
-    public RestaurantController(RestaurantMapperImpl restaurantMapper, RestaurantServiceImpl restaurantService) {
+    public RestaurantController(RestaurantMapperImpl restaurantMapper, RestaurantServiceImpl restaurantService, UserService userService) {
         this.restaurantMapper = restaurantMapper;
         this.restaurantService = restaurantService;
+        this.userService = userService;
     }
 
     @GetMapping(path = "")
@@ -86,5 +90,18 @@ public class RestaurantController {
         }
         restaurantService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+//    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
+    @GetMapping(path = "/user/{id}")
+    public ResponseEntity<RestaurantDto> getRestUser(@PathVariable("id") Long id) {
+        Optional<UserEntity> optionalUserEntity = userService.findOne(id);
+        UserEntity userEntity = optionalUserEntity.orElseThrow(() -> new IllegalArgumentException("Could not find the user"));
+
+        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantService.findByEmail(userEntity.getEmail());
+        RestaurantEntity restaurant = optionalRestaurantEntity.orElseThrow(() -> new IllegalArgumentException("Could not find the user"));
+
+        RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurant);
+        return new ResponseEntity<>(restaurantDto, HttpStatus.OK);
     }
 }

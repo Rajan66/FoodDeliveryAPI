@@ -4,7 +4,6 @@ import com.rajan.foodDeliveryApp.domain.entities.MenuEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface MenuService {
@@ -15,7 +14,7 @@ public interface MenuService {
 
     Page<MenuEntity> findAll(Pageable pageable);
 
-    List<MenuEntity> getMenusByRestaurantId(Long id);
+    Page<MenuEntity> getMenusByRestaurantId(Long id, Pageable pageable);
 
     void delete(Long id);
 

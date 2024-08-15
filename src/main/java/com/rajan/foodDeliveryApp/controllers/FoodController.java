@@ -4,6 +4,7 @@ import com.rajan.foodDeliveryApp.domain.dto.FoodDto;
 import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
 import com.rajan.foodDeliveryApp.services.FoodService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ public class FoodController {
 
     private final FoodService foodService;
 
+    @Autowired
     public FoodController(Mapper<FoodEntity, FoodDto> foodMapper, FoodService foodService) {
         this.foodMapper = foodMapper;
         this.foodService = foodService;
@@ -41,6 +43,13 @@ public class FoodController {
     @GetMapping(path = "")
     public Page<FoodDto> listFoods(Pageable pageable) {
         Page<FoodEntity> foodEntities = foodService.findAll(pageable);
+        return foodEntities.map(foodMapper::mapTo);
+    }
+
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
+    @GetMapping(path = "/menu/{id}")
+    public Page<FoodDto> listMenuFoods(@PathVariable("id") Long id, Pageable pageable) {
+        Page<FoodEntity> foodEntities = foodService.findAllByMenu(id, pageable);
         return foodEntities.map(foodMapper::mapTo);
     }
 
@@ -66,6 +75,7 @@ public class FoodController {
         FoodDto savedFoodDto = foodMapper.mapTo(savedFoodEntity);
         return new ResponseEntity<>(savedFoodDto, HttpStatus.OK);
     }
+
     //TODO also need to require restaurant id that has the food instead of role
     @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @DeleteMapping(path = "/{id}")

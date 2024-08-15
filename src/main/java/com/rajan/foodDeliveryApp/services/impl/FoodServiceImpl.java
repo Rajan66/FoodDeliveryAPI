@@ -27,6 +27,11 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public Page<FoodEntity> findAllByMenu(Long id, Pageable pageable) {
+        return foodRepository.findAllByMenuId(id,pageable);
+    }
+
+    @Override
     public Page<FoodEntity> findAll(Pageable pageable) {
         return foodRepository.findAll(pageable);
     }

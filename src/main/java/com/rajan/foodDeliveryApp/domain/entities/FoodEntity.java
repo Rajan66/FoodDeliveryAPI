@@ -27,5 +27,5 @@ public class FoodEntity {
     private BigDecimal price;
 
     @Column(name = "menu_id")
-    private Long menu_id;
+    private Long menuId;
 }

@@ -4,7 +4,6 @@ import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface FoodService {
@@ -12,6 +11,8 @@ public interface FoodService {
     FoodEntity save(FoodEntity foodEntity);
 
     Optional<FoodEntity> findOne(Long id);
+
+    Page<FoodEntity> findAllByMenu(Long id, Pageable pageable);
 
     Page<FoodEntity> findAll(Pageable pageable);
 

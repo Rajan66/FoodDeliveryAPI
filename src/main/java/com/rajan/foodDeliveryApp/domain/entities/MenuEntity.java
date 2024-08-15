@@ -17,8 +17,9 @@ import java.util.List;
 public class MenuEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "restaurant_id_seq")
     @Column(name = "menu_id")
-    private Long menu_id;
+    private Long menuId;
 
     private String name;
 
@@ -26,7 +27,7 @@ public class MenuEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private RestaurantEntity restaurant;
 
-    @OneToMany(mappedBy = "menu_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menuId", cascade = CascadeType.ALL)
     private List<FoodEntity> foods;
 
 }

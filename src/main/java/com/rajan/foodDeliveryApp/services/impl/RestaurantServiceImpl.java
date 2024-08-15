@@ -53,6 +53,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Optional<RestaurantEntity> findByEmail(String email) {
+        return restaurantRepository.findByEmail(email);
+    }
+
+    @Override
     public Page<RestaurantEntity> findAll(Pageable pageable) {
         return restaurantRepository.findAll(pageable);
     }
