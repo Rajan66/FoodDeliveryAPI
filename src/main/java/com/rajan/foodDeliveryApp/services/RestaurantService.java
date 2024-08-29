@@ -9,7 +9,11 @@ import java.util.Optional;
 public interface RestaurantService {
     RestaurantEntity save(RestaurantEntity restaurantEntity);
 
+    RestaurantEntity save(RestaurantEntity restaurantEntity, Long id);
+
     Optional<RestaurantEntity> findOne(Long id);
+
+    Optional<RestaurantEntity> findByEmail(String email);
 
     Page<RestaurantEntity> findAll(Pageable pageable);
 
@@ -17,4 +21,5 @@ public interface RestaurantService {
 
     boolean isExists(Long id);
 
+    String encodeImage(byte[] imageData);
 }

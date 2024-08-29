@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -33,8 +32,9 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findAll(pageable);
     }
 
-    public List<MenuEntity> getMenusByRestaurantId(Long restaurantId) {
-        return menuRepository.findByRestaurantRestaurantId(restaurantId);
+    @Override
+    public Page<MenuEntity> getMenusByRestaurantId(Long restaurantId,Pageable pageable) {
+        return menuRepository.findByRestaurantRestaurantId(restaurantId,pageable);
     }
 
     @Override

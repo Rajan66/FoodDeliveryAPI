@@ -17,13 +17,15 @@ public class RestaurantEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "restaurant_id_seq")
     @Column(name = "restaurant_id")
     private Long restaurantId;
-
     private String name;
-
     private String email;
-
     private String cuisine;
-
-    private Long contact;
-
+    private String contact;
+    private String address;
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    private String status;
+    @Column(name = "image")
+    private String image;
+    private Double averagePrice;
 }
