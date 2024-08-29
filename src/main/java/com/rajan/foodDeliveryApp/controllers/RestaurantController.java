@@ -39,7 +39,8 @@ public class RestaurantController {
     }
 
     @GetMapping(path = "")
-    public Page<RestaurantDto> listRestaurants(Pageable pageable) {
+    public Page<RestaurantDto> listRestaurants(Pageable pageable, @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "30") int size) {
         Page<RestaurantEntity> restaurantEntityPage = restaurantService.findAll(pageable);
         return restaurantEntityPage.map(restaurantEntity -> {
             RestaurantDto restaurantDto = restaurantMapper.mapTo(restaurantEntity);
@@ -92,7 +93,7 @@ public class RestaurantController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
+    //    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @GetMapping(path = "/user/{id}")
     public ResponseEntity<RestaurantDto> getRestUser(@PathVariable("id") Long id) {
         Optional<UserEntity> optionalUserEntity = userService.findOne(id);
