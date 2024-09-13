@@ -28,7 +28,8 @@ public class SecurityConfig {
             "/api/files/images/{filename}",
             "api/restaurants/{restaurant_id}/menus",
             "api/foods/menu/{id}",
-            "api/recommendations/restaurant"
+            "api/recommendations/restaurant",
+            "api/{id}/orders",
     };
 
     private final JwtAuthFilter jwtAuthFilter;
