@@ -23,9 +23,8 @@ public class OrderDetailEntity {
     @JoinColumn(name = "order_id")
     private Long orderId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
-    private FoodEntity foodId;
+    private Long foodId;
 
     private BigDecimal quantity;
 

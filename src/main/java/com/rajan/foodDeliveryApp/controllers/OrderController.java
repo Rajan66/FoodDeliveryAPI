@@ -2,15 +2,9 @@ package com.rajan.foodDeliveryApp.controllers;
 
 import com.rajan.foodDeliveryApp.domain.dto.OrderDetailDto;
 import com.rajan.foodDeliveryApp.domain.dto.OrderDto;
-import com.rajan.foodDeliveryApp.domain.entities.OrderDetailEntity;
-import com.rajan.foodDeliveryApp.domain.entities.OrderEntity;
-import com.rajan.foodDeliveryApp.domain.entities.RestaurantEntity;
-import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
+import com.rajan.foodDeliveryApp.domain.entities.*;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
-import com.rajan.foodDeliveryApp.services.OrderDetailService;
-import com.rajan.foodDeliveryApp.services.OrderService;
-import com.rajan.foodDeliveryApp.services.RestaurantService;
-import com.rajan.foodDeliveryApp.services.UserService;
+import com.rajan.foodDeliveryApp.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +26,7 @@ public class OrderController {
     private final UserService userService;
     private final RestaurantService restaurantService;
     private final OrderDetailService orderDetailService;
+    private final FoodService foodService;
 
     private final Mapper<OrderEntity, OrderDto> orderMapper;
     private final Mapper<OrderDetailEntity, OrderDetailDto> orderDetailMapper;
@@ -42,6 +37,7 @@ public class OrderController {
             UserService userService,
             RestaurantService restaurantService,
             OrderDetailService orderDetailService,
+            FoodService foodService,
             Mapper<OrderEntity, OrderDto> orderMapper,
             Mapper<OrderDetailEntity, OrderDetailDto> orderDetailMapper
     ) {
@@ -51,6 +47,7 @@ public class OrderController {
         this.orderDetailService = orderDetailService;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
+        this.foodService = foodService;
     }
 
     // TODO this require user specific access, admin and other users can't access them
@@ -61,6 +58,7 @@ public class OrderController {
     }
 
     // TODO other roles like admin can't create orders for better security
+//    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/{user_id}/orders")
     public ResponseEntity<OrderDto> createOrder(@PathVariable("user_id") Long userId, @RequestBody OrderDto orderDto) {
 
@@ -82,6 +80,7 @@ public class OrderController {
         for (OrderDetailDto orderDetailDto : orderDto.getOrderDetails()) {
             OrderDetailEntity newOrderDetail = orderDetailMapper.mapFrom(orderDetailDto);
             newOrderDetail.setOrderId(savedOrderEntity.getId());
+            newOrderDetail.setFoodId(orderDetailDto.getFoodId());
             savedOrderDetails.add(newOrderDetail);
         }
 

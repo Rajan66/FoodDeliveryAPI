@@ -18,6 +18,6 @@ public class OrderDetailDto {
     private Integer quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;
-    private String notes;
-    private String status;
+//    private String notes;
+//    private String orderDetailStatus;
 }
