@@ -18,7 +18,7 @@ public class FoodEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "food_id_seq")
     @Column(name = "food_id")
-    private Long food_id;
+    private Long foodId;
 
     private String name;
 

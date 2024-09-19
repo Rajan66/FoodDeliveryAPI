@@ -81,6 +81,7 @@ public class OrderController {
             OrderDetailEntity newOrderDetail = orderDetailMapper.mapFrom(orderDetailDto);
             newOrderDetail.setOrderId(savedOrderEntity.getId());
             newOrderDetail.setFoodId(orderDetailDto.getFoodId());
+            newOrderDetail.setFoodName(orderDetailDto.getFoodName());
             savedOrderDetails.add(newOrderDetail);
         }
 
