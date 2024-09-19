@@ -49,8 +49,7 @@ public class UserController {
         Page<UserEntity> usersList = userService.findAll(pageable);
         return usersList.map(userMapper::mapTo);
     }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    Validate the user's identity for updating
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
         if (!userService.isExists(id)) {

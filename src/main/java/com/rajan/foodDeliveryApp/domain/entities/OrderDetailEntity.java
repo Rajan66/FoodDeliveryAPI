@@ -26,6 +26,8 @@ public class OrderDetailEntity {
     @JoinColumn(name = "food_id")
     private Long foodId;
 
+    private String foodName;
+
     private BigDecimal quantity;
 
     private BigDecimal price;

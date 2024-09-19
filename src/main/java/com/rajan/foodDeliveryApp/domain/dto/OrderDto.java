@@ -17,6 +17,8 @@ public class OrderDto {
     private Long id;
     private Long restaurantId;
     private Long userId;
+    private RestaurantDto restaurant;
+    private UserDto user;
     private Long partnerId;
     private List<OrderDetailDto> orderDetails;
     private LocalDateTime orderDate;

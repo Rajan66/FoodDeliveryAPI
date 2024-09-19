@@ -15,6 +15,7 @@ public class OrderDetailDto {
     private Long id;
     private Long foodId;
     private Long orderId;
+    private String foodName;
     private Integer quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;
