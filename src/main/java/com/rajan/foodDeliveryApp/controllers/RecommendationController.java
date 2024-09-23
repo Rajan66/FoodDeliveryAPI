@@ -23,8 +23,8 @@ public class RecommendationController {
     private RestaurantRepository restaurantRepository;
 
     @PostMapping("/restaurant")
-    public RestaurantEntity recommendRestaurant(@RequestBody OrderEntity userOrder) {
+    public List<RestaurantEntity> recommendRestaurant(@RequestBody List<OrderEntity> userOrders) {
         List<RestaurantEntity> allRestaurants = restaurantRepository.findAll();
-        return recommenderService.recommendRestaurant(allRestaurants, userOrder);
+        return recommenderService.recommendRestaurant(allRestaurants, userOrders);
     }
 }

@@ -13,8 +13,9 @@ import java.math.BigDecimal;
 @Builder
 public class FoodDto {
     private Long foodId;
+    private Long menuId;
     private String name;
+    private Integer spiceLevel;
     private String category;
     private BigDecimal price;
-    private Long menuId;
 }
