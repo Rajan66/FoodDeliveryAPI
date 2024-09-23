@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,12 +29,17 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Page<FoodEntity> findAllByMenu(Long id, Pageable pageable) {
-        return foodRepository.findAllByMenuId(id,pageable);
+        return foodRepository.findAllByMenuId(id, pageable);
     }
 
     @Override
     public Page<FoodEntity> findAll(Pageable pageable) {
         return foodRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<FoodEntity> findFoodsByRestaurantId(Long id) {
+        return foodRepository.findFoodsByRestaurantId(id);
     }
 
     @Override

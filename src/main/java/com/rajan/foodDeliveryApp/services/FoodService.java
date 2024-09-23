@@ -4,6 +4,7 @@ import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FoodService {
@@ -15,6 +16,8 @@ public interface FoodService {
     Page<FoodEntity> findAllByMenu(Long id, Pageable pageable);
 
     Page<FoodEntity> findAll(Pageable pageable);
+
+    List<FoodEntity> findFoodsByRestaurantId(Long id);
 
     Optional<FoodEntity> findById(Long id);
 
