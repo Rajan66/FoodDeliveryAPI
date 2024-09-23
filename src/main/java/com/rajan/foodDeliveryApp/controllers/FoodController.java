@@ -4,6 +4,7 @@ import com.rajan.foodDeliveryApp.domain.dto.FoodDto;
 import com.rajan.foodDeliveryApp.domain.entities.FoodEntity;
 import com.rajan.foodDeliveryApp.mappers.Mapper;
 import com.rajan.foodDeliveryApp.services.FoodService;
+import com.rajan.foodDeliveryApp.services.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +23,13 @@ public class FoodController {
     private final Mapper<FoodEntity, FoodDto> foodMapper;
 
     private final FoodService foodService;
+    private final RestaurantService restaurantService;
 
     @Autowired
-    public FoodController(Mapper<FoodEntity, FoodDto> foodMapper, FoodService foodService) {
+    public FoodController(Mapper<FoodEntity, FoodDto> foodMapper, FoodService foodService, RestaurantService restaurantService) {
         this.foodMapper = foodMapper;
         this.foodService = foodService;
+        this.restaurantService = restaurantService;
     }
 
     @PreAuthorize("hasRole('ROLE_RESTAURANT')")
@@ -35,6 +38,7 @@ public class FoodController {
         FoodEntity foodEntity = foodMapper.mapFrom(foodDto);
         FoodEntity savedFoodEntity = foodService.save(foodEntity);
         FoodDto savedFoodDto = foodMapper.mapTo(savedFoodEntity);
+        restaurantService.updateAveragePrice(foodEntity.getMenuId());
         return new ResponseEntity<>(savedFoodDto, HttpStatus.CREATED);
     }
 
@@ -72,6 +76,7 @@ public class FoodController {
         foodEntity.setFoodId(id);
         FoodEntity savedFoodEntity = foodService.save(foodEntity);
         FoodDto savedFoodDto = foodMapper.mapTo(savedFoodEntity);
+        restaurantService.updateAveragePrice(foodEntity.getMenuId());
         return new ResponseEntity<>(savedFoodDto, HttpStatus.OK);
     }
 

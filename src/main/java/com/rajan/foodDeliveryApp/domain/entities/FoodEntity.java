@@ -26,6 +26,9 @@ public class FoodEntity {
 
     private BigDecimal price;
 
+    @Column(name = "spice_level")
+    private Integer spiceLevel;
+
     @Column(name = "menu_id")
     private Long menuId;
 }

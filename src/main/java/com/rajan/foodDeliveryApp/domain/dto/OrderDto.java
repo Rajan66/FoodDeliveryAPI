@@ -24,6 +24,7 @@ public class OrderDto {
     private LocalDateTime orderDate;
     private String deliveryAddress;
     private BigDecimal totalPrice;
+    private BigDecimal averagePrice;
     private String paymentStatus;
     private String orderStatus;
     private String specialInstructions;
@@ -31,4 +32,5 @@ public class OrderDto {
     private String cancellationReason;
     private LocalDateTime deliveryDate;
     private String notes;
+
 }

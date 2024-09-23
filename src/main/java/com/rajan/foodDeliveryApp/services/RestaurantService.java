@@ -22,4 +22,6 @@ public interface RestaurantService {
     boolean isExists(Long id);
 
     String encodeImage(byte[] imageData);
+
+    void updateAveragePrice(Long menuId);
 }

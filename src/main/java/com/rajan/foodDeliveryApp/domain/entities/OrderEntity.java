@@ -47,6 +47,9 @@ public class OrderEntity {
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
+    @Column(name = "average_price")
+    private BigDecimal averagePrice;
+
     @Column(name = "payment_status")
     private String paymentStatus;
 
