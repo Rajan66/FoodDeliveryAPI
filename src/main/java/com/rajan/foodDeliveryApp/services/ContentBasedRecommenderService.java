@@ -22,25 +22,22 @@ public class ContentBasedRecommenderService {
         this.menuService = menuService;
     }
 
-    // Dummy data for cuisines
-    private List<String> allCuisines = Arrays.asList("Nepali", "Italian", "Chinese", "American", "Japanese", "Korean", "Indian");
+    private List<String> allCuisines = Arrays.asList("Nepali", "Italian", "Momo",
+            "Chinese", "American", "Japanese", "Korean", "Indian", "Continental", "Burger");
 
     public double[] createRestaurantVector(RestaurantEntity restaurant) {
-        double[] vector = new double[2 + allCuisines.size()]; // Updated size for spiceLevel inclusion
+        double[] vector = new double[2 + allCuisines.size()];
 
-        // Include cuisine encoding
         for (int i = 0; i < allCuisines.size(); i++) {
             vector[i] = restaurant.getCuisine().equals(allCuisines.get(i)) ? 1.0 : 0.0;
         }
 
-        // Fetch foods for the restaurant and calculate the average spice level
         List<FoodEntity> foods = foodService.findFoodsByRestaurantId(restaurant.getRestaurantId());
         double averageSpiceLevel = foods.stream()
                 .mapToInt(FoodEntity::getSpiceLevel)
                 .average()
-                .orElse(0); // Default to 0 if no spice level is found
+                .orElse(0);
 
-        // Use index [allCuisines.size()] for spice level
         vector[allCuisines.size()] = averageSpiceLevel;
 
         return vector;
@@ -61,12 +58,12 @@ public class ContentBasedRecommenderService {
     }
 
     public double[] createOrderVector(List<OrderEntity> userOrders) {
-        double[] combinedVector = new double[2 + allCuisines.size()]; // Updated size for spiceLevel inclusion
+        double[] combinedVector = new double[2 + allCuisines.size()];
 
         for (OrderEntity order : userOrders) {
             double[] orderVector = createOrderDetailsVector(order.getOrderDetails());
             for (int i = 0; i < combinedVector.length; i++) {
-                combinedVector[i] += orderVector[i]; // Summing up all order vectors
+                combinedVector[i] += orderVector[i];
             }
         }
 
@@ -79,7 +76,7 @@ public class ContentBasedRecommenderService {
     }
 
     private double[] createOrderDetailsVector(List<OrderDetailEntity> orderDetails) {
-        double[] vector = new double[2 + allCuisines.size()]; // Updated size for spiceLevel inclusion
+        double[] vector = new double[2 + allCuisines.size()];
 
         for (OrderDetailEntity orderDetail : orderDetails) {
             FoodEntity food = foodService.findOne(orderDetail.getFoodId()).orElseThrow(() -> new RuntimeException("Food not found"));
@@ -89,11 +86,9 @@ public class ContentBasedRecommenderService {
                 vector[i] += cuisine.equals(allCuisines.get(i)) ? 1.0 : 0.0;
             }
 
-            // Include spice level
             vector[allCuisines.size()] += food.getSpiceLevel();
         }
 
-        // Normalize the vector for the number of items in the order
         int itemCount = orderDetails.size();
         for (int i = 0; i < vector.length; i++) {
             vector[i] /= itemCount;
