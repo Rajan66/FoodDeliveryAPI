@@ -1,6 +1,8 @@
 package com.rajan.foodDeliveryApp.services;
 
 import com.rajan.foodDeliveryApp.domain.entities.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ContentBasedRecommenderService {
+    private static final Logger log = LoggerFactory.getLogger(ContentBasedRecommenderService.class);
+
     private static final double THRESHOLD = 0.70;
 
     private final FoodService foodService;
@@ -52,8 +56,8 @@ public class ContentBasedRecommenderService {
             dotProduct += vectorA[i] * vectorB[i];
             normA += Math.pow(vectorA[i], 2);
             normB += Math.pow(vectorB[i], 2);
+            log.info("Score of item " + i + " : " + String.valueOf(dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))));
         }
-
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }
 
@@ -85,7 +89,6 @@ public class ContentBasedRecommenderService {
             for (int i = 0; i < allCuisines.size(); i++) {
                 vector[i] += cuisine.equals(allCuisines.get(i)) ? 1.0 : 0.0;
             }
-
             vector[allCuisines.size()] += food.getSpiceLevel();
         }
 
@@ -93,7 +96,6 @@ public class ContentBasedRecommenderService {
         for (int i = 0; i < vector.length; i++) {
             vector[i] /= itemCount;
         }
-
         return vector;
     }
 

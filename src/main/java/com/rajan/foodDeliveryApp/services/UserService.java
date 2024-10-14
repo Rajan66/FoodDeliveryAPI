@@ -16,10 +16,19 @@ public interface UserService {
 
     Optional<UserEntity> findOne(Long id);
 
+    Optional<UserEntity> findByEmail(String email);
+
     boolean isExists(Long id);
 
     boolean isExistsByEmail(String email);
 
     void delete(Long id);
 
+    void createPasswordResetTokenForUser(UserEntity user, String token);
+
+    void updatePassword(UserEntity user, String newPassword, String token);
+
+    boolean validatePasswordResetToken(String token);
+
+    Optional<UserEntity> findByPasswordResetToken(String token);
 }

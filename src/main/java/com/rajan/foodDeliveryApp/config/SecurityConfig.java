@@ -19,18 +19,18 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity() // default value is true prePostEnabled = true
 @RequiredArgsConstructor
 public class SecurityConfig {
-//    Tech Debt btw, I've enlisted most of the links because of time constraint
+    //    Tech Debt btw, I've enlisted most of the links because of time constraint
     private static final String[] AUTH_WHITELIST = {
             "/api/auth/login",
             "/api/auth/register",
             "/api/restaurants",
             "/api/restaurants/{id}",
             "/api/files/images/{filename}",
-            "api/restaurants/{restaurant_id}/menus",
-            "api/foods/menu/{id}",
-            "api/recommendations/restaurant",
-            "api/{id}/orders",
-//            "api/menus/{id}",
+            "/api/restaurants/{restaurant_id}/menus",
+            "/api/foods/menu/{id}",
+            "/api/recommendations/restaurant",
+            "/api/{id}/orders",
+            "/api/password-reset/*",
     };
 
     private final JwtAuthFilter jwtAuthFilter;
