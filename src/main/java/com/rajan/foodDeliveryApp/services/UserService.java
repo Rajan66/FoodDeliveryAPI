@@ -26,7 +26,7 @@ public interface UserService {
 
     void createPasswordResetTokenForUser(UserEntity user, String token);
 
-    void updatePassword(UserEntity user, String newPassword);
+    void updatePassword(UserEntity user, String newPassword, String token);
 
     boolean validatePasswordResetToken(String token);
 

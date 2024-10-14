@@ -7,9 +7,12 @@ import com.rajan.foodDeliveryApp.repositories.PasswordResetTokenRepository;
 import com.rajan.foodDeliveryApp.repositories.UserRepository;
 import com.rajan.foodDeliveryApp.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,15 +21,17 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final UserPatcher patcher;
     private final PasswordResetTokenRepository tokenRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserPatcher patcher, PasswordResetTokenRepository tokenRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserPatcher patcher, PasswordResetTokenRepository tokenRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.patcher = patcher;
         this.tokenRepository = tokenRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -81,17 +86,26 @@ public class UserServiceImpl implements UserService {
     }
 
     public void createPasswordResetTokenForUser(UserEntity user, String token) {
-        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, user);
-        tokenRepository.save(passwordResetToken);
+        if (!tokenRepository.existsByUser(user)) {
+            PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, user);
+            tokenRepository.save(passwordResetToken);
+        } else {
+            PasswordResetTokenEntity passwordResetToken = tokenRepository.findByUser(user);
+            passwordResetToken.setToken(token);
+            tokenRepository.save(passwordResetToken);
+        }
     }
 
-    public void updatePassword(UserEntity user, String newPassword) {
-        user.setPassword(newPassword);
+    @Transactional
+    public void updatePassword(UserEntity user, String newPassword, String token) {
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         userRepository.save(user);
+        tokenRepository.deleteByToken(token);
     }
 
     public boolean validatePasswordResetToken(String token) {
         PasswordResetTokenEntity resetToken = tokenRepository.findByToken(token);
+        log.info("UserServiceImpl: resetToken: {}", resetToken);
         if (resetToken == null || resetToken.getExpiryDate().before(new Date())) {
             return false;
         }
