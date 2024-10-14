@@ -1,9 +1,9 @@
 package com.rajan.foodDeliveryApp.services.impl;
 
-import com.rajan.foodDeliveryApp.config.Patcher;
-import com.rajan.foodDeliveryApp.config.impl.RestaurantPatcher;
 import com.rajan.foodDeliveryApp.config.impl.UserPatcher;
+import com.rajan.foodDeliveryApp.domain.entities.PasswordResetTokenEntity;
 import com.rajan.foodDeliveryApp.domain.entities.UserEntity;
+import com.rajan.foodDeliveryApp.repositories.PasswordResetTokenRepository;
 import com.rajan.foodDeliveryApp.repositories.UserRepository;
 import com.rajan.foodDeliveryApp.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,18 +12,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserPatcher patcher ;
+    private final UserPatcher patcher;
+    private final PasswordResetTokenRepository tokenRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserPatcher patcher) {
+    public UserServiceImpl(UserRepository userRepository, UserPatcher patcher, PasswordResetTokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.patcher = patcher;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -57,6 +60,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserEntity> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public boolean isExists(Long id) {
         return userRepository.existsById(id);
     }
@@ -72,5 +80,28 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    public void createPasswordResetTokenForUser(UserEntity user, String token) {
+        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, user);
+        tokenRepository.save(passwordResetToken);
+    }
+
+    public void updatePassword(UserEntity user, String newPassword) {
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
+
+    public boolean validatePasswordResetToken(String token) {
+        PasswordResetTokenEntity resetToken = tokenRepository.findByToken(token);
+        if (resetToken == null || resetToken.getExpiryDate().before(new Date())) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<UserEntity> findByPasswordResetToken(String token) {
+        PasswordResetTokenEntity passwordResetToken = tokenRepository.findByToken(token);
+        return passwordResetToken != null ? Optional.of(passwordResetToken.getUser()) : Optional.empty();
+    }
 
 }
